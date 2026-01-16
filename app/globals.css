@@ -1,0 +1,37 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Ubuntu', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  ::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer utilities {
+  .font-ubuntu {
+    font-family: 'Ubuntu', sans-serif;
+  }
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+.pb-safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
