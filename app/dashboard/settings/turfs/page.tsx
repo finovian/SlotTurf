@@ -11,11 +11,11 @@ export default function ManageTurfsPage() {
   const { data: turfs = [] } = useTurfs();
 
   const handleAdd = () => {
-    router.push("/settings/turfs/new");
+    router.push("/dashboard/settings/turfs/new");
   };
 
   const handleEdit = (turf: Turf) => {
-    router.push(`/settings/turfs/${turf.id}`);
+    router.push(`/dashboard/settings/turfs/${turf.id}`);
   };
 
   const handleBack = () => {

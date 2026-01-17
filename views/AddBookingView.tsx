@@ -59,7 +59,7 @@ const AddBookingView: React.FC<AddBookingViewProps> = ({ turf, onAdd, onConfirm,
   return (
     <div className="py-4 space-y-6 animate-in fade-in duration-500">
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="bg-white rounded-[32px] border border-neutral-100 p-6 space-y-6 shadow-sm">
+        <div className="bg-white rounded-4xl border border-neutral-100 p-6 space-y-6 shadow-sm">
           {/* Client Details */}
           <div className="space-y-4">
             <div className="space-y-1.5">
@@ -68,7 +68,7 @@ const AddBookingView: React.FC<AddBookingViewProps> = ({ turf, onAdd, onConfirm,
                 <User className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
                 <input
                   required
-                  className="w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 transition-all font-bold"
+                  className="placeholder:text-[#a1a1a1] text-black w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 transition-all font-bold"
                   placeholder="e.g. John Doe"
                   value={formData.clientName}
                   onChange={e => setFormData({...formData, clientName: e.target.value})}
@@ -84,7 +84,7 @@ const AddBookingView: React.FC<AddBookingViewProps> = ({ turf, onAdd, onConfirm,
                   required
                   type="tel"
                   maxLength={10}
-                  className="w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 transition-all font-bold tracking-widest"
+                  className="placeholder:text-[#a1a1a1] text-black w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 transition-all font-bold tracking-widest"
                   placeholder="9876543210"
                   value={formData.mobileNumber}
                   onChange={e => setFormData({...formData, mobileNumber: e.target.value.replace(/\D/g, '').slice(0, 10)})}
@@ -104,7 +104,7 @@ const AddBookingView: React.FC<AddBookingViewProps> = ({ turf, onAdd, onConfirm,
                 <input
                   required
                   type="date"
-                  className="w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 transition-all font-bold"
+                  className="placeholder:text-[#a1a1a1] text-black w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 transition-all font-bold"
                   value={formData.date}
                   onChange={e => setFormData({...formData, date: e.target.value})}
                 />
@@ -119,7 +119,7 @@ const AddBookingView: React.FC<AddBookingViewProps> = ({ turf, onAdd, onConfirm,
                   <input
                     required
                     type="time"
-                    className="w-full h-12 bg-neutral-50 border border-neutral-200 rounded-xl pl-10 pr-2 font-bold text-sm"
+                    className="placeholder:text-[#a1a1a1] text-black w-full h-12 bg-neutral-50 border border-neutral-200 rounded-xl pl-10 pr-2 font-bold text-sm"
                     value={formData.startTime}
                     onChange={e => setFormData({...formData, startTime: e.target.value})}
                   />
@@ -132,7 +132,7 @@ const AddBookingView: React.FC<AddBookingViewProps> = ({ turf, onAdd, onConfirm,
                   <input
                     required
                     type="time"
-                    className="w-full h-12 bg-neutral-50 border border-neutral-200 rounded-xl pl-10 pr-2 font-bold text-sm"
+                    className="placeholder:text-[#a1a1a1] text-black w-full h-12 bg-neutral-50 border border-neutral-200 rounded-xl pl-10 pr-2 font-bold text-sm"
                     value={formData.endTime}
                     onChange={e => setFormData({...formData, endTime: e.target.value})}
                   />
@@ -160,7 +160,7 @@ const AddBookingView: React.FC<AddBookingViewProps> = ({ turf, onAdd, onConfirm,
               <IndianRupee className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" size={18} />
               <input
                 type="number"
-                className="w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 transition-all font-bold text-lg"
+                className="placeholder:text-[#a1a1a1] text-black w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 transition-all font-bold text-lg"
                 value={formData.totalAmount}
                 onChange={e => {
                   setManualPrice(true);
@@ -178,7 +178,7 @@ const AddBookingView: React.FC<AddBookingViewProps> = ({ turf, onAdd, onConfirm,
 
         <button
           type="submit"
-          className="w-full h-16 bg-neutral-900 text-white font-bold rounded-2xl shadow-xl shadow-neutral-900/10 flex items-center justify-center gap-3 active:scale-[0.98] transition-all text-lg"
+          className="w-full h-16 bg-neutral-900 text-white cursor-pointer font-bold rounded-2xl shadow-xl shadow-neutral-900/10 flex items-center justify-center gap-3 active:scale-[0.98] transition-all text-lg"
         >
           <Save size={20} />
           {initialData ? 'Update Booking' : 'Confirm & Save'}

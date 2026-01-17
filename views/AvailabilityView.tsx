@@ -93,7 +93,7 @@ const AvailabilityView: React.FC<AvailabilityViewProps> = ({
           {/* Horizontal Date Picker */}
           <div 
             ref={scrollRef}
-            className="flex gap-3 overflow-x-auto no-scrollbar pb-4 px-1 scroll-smooth snap-x snap-mandatory"
+            className="flex gap-3 overflow-x-auto scrollbar-hide scrollbar-hide pb-4 px-1 scroll-smooth snap-x snap-mandatory"
           >
             {nextDates.map(date => {
               const d = new Date(date);
@@ -104,7 +104,7 @@ const AvailabilityView: React.FC<AvailabilityViewProps> = ({
                 <button
                   key={date}
                   onClick={() => setSelectedDate(date)}
-                  className={`flex-shrink-0 w-[72px] h-24 rounded-[28px] flex flex-col items-center justify-center transition-all border snap-center focus:outline-none ${
+                  className={`shrink-0 w-18 h-24 rounded-[28px] flex flex-col items-center justify-center transition-all border snap-center focus:outline-none ${
                     isSelected 
                       ? 'bg-neutral-900 border-neutral-900 text-white shadow-xl shadow-neutral-900/10' 
                       : 'bg-white border-neutral-100 text-neutral-500'
@@ -135,7 +135,7 @@ const AvailabilityView: React.FC<AvailabilityViewProps> = ({
               </p>
             </div>
 
-            <div className="bg-white rounded-[32px] border border-neutral-100 shadow-sm overflow-hidden divide-y divide-neutral-50">
+            <div className="bg-white rounded-4xl border border-neutral-100 shadow-sm overflow-hidden divide-y divide-neutral-50">
               {timeSlots.map(time => {
                 const booking = getSlotStatus(time);
                 const isActionActive = activeActionSlot === time;
@@ -154,7 +154,7 @@ const AvailabilityView: React.FC<AvailabilityViewProps> = ({
                     >
                       <div className="flex items-center gap-6">
                         <div className="w-14 text-sm font-bold text-neutral-400">{time}</div>
-                        <div className="h-10 w-[1px] bg-neutral-100" />
+                        <div className="h-10 w-px bg-neutral-100" />
                         <div>
                           {booking ? (
                             <div className="space-y-0.5">

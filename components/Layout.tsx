@@ -1,4 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import {
+  Home,
+  Calendar,
+  Clock,
+  BarChart3,
+  Settings,
+  ChevronLeft
+} from 'lucide-react';
 import { 
   Home, 
   Calendar, 
@@ -7,8 +15,9 @@ import {
   Settings, 
   ChevronLeft
 } from 'lucide-react';
-import { View } from '../types.ts';
-import { useStore } from '../lib/store.tsx';
+import { View } from '../types';
+import { useUIStore } from '../lib/store';
+import { useTurfs } from '@/hooks/use-data';
 
 interface LayoutProps {
   // Fix: Making children optional helps resolve cases where the TS compiler fails to recognize 
@@ -19,9 +28,9 @@ interface LayoutProps {
 }
 
 export default function Layout({ children, currentView, onNavigate }: LayoutProps) {
-  const { state } = useStore();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const { data: turfs = [] } = useTurfs();
 
   useEffect(() => {
     const controlHeader = () => {
@@ -63,7 +72,7 @@ export default function Layout({ children, currentView, onNavigate }: LayoutProp
   const title = titleMap[currentView] || 'TurfFlow Pro';
 
   return (
-    <div className="min-h-screen bg-neutral-50 flex flex-col font-ubuntu no-scrollbar">
+    <div className="min-h-screen bg-neutral-50 flex flex-col font-ubuntu scrollbar-hide">
       {/* Dynamic Header */}
       <header 
         className={`fixed top-0 left-0 right-0 z-50 bg-white border-b border-neutral-100 px-6 h-16 flex items-center justify-between transition-transform duration-300 ${isVisible ? 'translate-y-0' : '-translate-y-full'}`}
@@ -82,13 +91,13 @@ export default function Layout({ children, currentView, onNavigate }: LayoutProp
         
         <div className="flex items-center gap-4">
           <div className="w-8 h-8 bg-neutral-900 rounded-lg flex items-center justify-center text-white font-bold text-xs shadow-lg shadow-neutral-900/10">
-            {state.turfs[0]?.name.charAt(0) || 'T'}
+            {turfs[0]?.name.charAt(0) || 'T'}
           </div>
         </div>
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 pt-16 pb-24 px-4 overflow-x-hidden no-scrollbar">
+      <main className="flex-1 pt-16 pb-24 px-4 overflow-x-hidden scrollbar-hide">
         <div className="max-w-md mx-auto h-full">
           {children}
         </div>
@@ -121,3 +130,4 @@ export default function Layout({ children, currentView, onNavigate }: LayoutProp
     </div>
   );
 }
+

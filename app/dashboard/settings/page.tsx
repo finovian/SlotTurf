@@ -27,9 +27,9 @@ export default function SettingsPage() {
 
   const handleNavigate = (view: View) => {
     const viewToHref: { [key in View]?: string } = {
-      [View.EDIT_PROFILE]: '/settings/profile',
-      [View.EDIT_TURF]: '/settings/turfs',
-      [View.CUSTOMERS]: '/customers',
+      [View.EDIT_PROFILE]: '/dashboard/settings/profile',
+      [View.EDIT_TURF]: '/dashboard/settings/turfs',
+      [View.CUSTOMERS]: '/dashboard/settings/customers',
       [View.SUBSCRIPTION]: '#',
       [View.LEGAL]: '#',
       [View.SUPPORT]: '#',

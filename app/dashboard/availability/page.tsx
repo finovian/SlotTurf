@@ -16,12 +16,12 @@ export default function AvailabilityPage() {
 
   const handleSlotClick = () => {
     setEditingBooking(null);
-    router.push("/add-booking");
+    router.push("/dashboard/add-booking");
   };
 
   const handleEditBooking = (booking: Booking) => {
     setEditingBooking(booking);
-    router.push("/add-booking");
+    router.push("/dashboard/add-booking");
   };
 
   return (

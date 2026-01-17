@@ -92,7 +92,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({ bookings, turfs, selectedTurf
           <input 
             type="text" 
             placeholder="Search bookings..." 
-            className="w-full h-14 bg-white border border-neutral-100 rounded-2xl pl-12 pr-4 outline-none focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 transition-all font-medium text-sm"
+            className="text-black placeholder:text-[#a1a1a1] w-full h-14 bg-white border border-neutral-100 rounded-2xl pl-12 pr-4 outline-none focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 transition-all font-medium text-sm"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />

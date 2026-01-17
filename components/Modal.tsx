@@ -26,7 +26,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-6">
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-neutral-900/60 backdrop-blur-[2px] animate-in fade-in duration-200"
@@ -51,7 +51,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         <div className="flex flex-col gap-3">
           <button 
             onClick={onConfirm}
-            className={`w-full h-14 rounded-2xl font-bold text-base transition-all active:scale-[0.98] ${
+            className={`w-full cursor-pointer h-14 rounded-2xl font-bold text-base transition-all active:scale-[0.98] ${
               isDanger 
                 ? 'bg-red-600 text-white shadow-lg shadow-red-600/10' 
                 : 'bg-neutral-900 text-white shadow-lg shadow-neutral-900/10'

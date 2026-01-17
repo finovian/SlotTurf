@@ -72,14 +72,14 @@ const CustomersView: React.FC<CustomersViewProps> = ({ bookings, onCustomerSelec
         <input 
           type="text" 
           placeholder="Search customers..." 
-          className="w-full h-14 bg-white border border-neutral-100 rounded-2xl pl-12 pr-4 outline-none focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 transition-all font-medium"
+          className="text-black placeholder:text-[#a1a1a1] w-full h-14 bg-white border border-neutral-100 rounded-2xl pl-12 pr-4 outline-none focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 transition-all font-medium"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
 
       {/* Quick Filters */}
-      <div className="flex gap-2 overflow-x-auto no-scrollbar px-1">
+      <div className="flex gap-2 overflow-x-auto scrollbar-hide px-1">
         {[
           { id: 'all', label: 'All Clients' },
           { id: 'repeat', label: 'Repeat' },
@@ -88,7 +88,7 @@ const CustomersView: React.FC<CustomersViewProps> = ({ bookings, onCustomerSelec
           <button
             key={mode.id}
             onClick={() => setFilterMode(mode.id as any)}
-            className={`flex-shrink-0 px-4 h-10 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${
+            className={`cursor-pointer shrink-0 px-4 h-10 rounded-full text-xs font-bold uppercase tracking-widest transition-all ${
               filterMode === mode.id 
                 ? 'bg-neutral-900 text-white' 
                 : 'bg-white text-neutral-400 border border-neutral-100'
@@ -111,7 +111,7 @@ const CustomersView: React.FC<CustomersViewProps> = ({ bookings, onCustomerSelec
             <button 
               key={customer.mobile}
               onClick={() => onCustomerSelect(customer.mobile)}
-              className="w-full bg-white p-5 rounded-[28px] border border-neutral-100 shadow-sm flex items-center justify-between hover:bg-neutral-50 active:scale-[0.98] transition-all text-left focus:outline-none"
+              className="cursor-pointer w-full bg-white p-5 rounded-[28px] border border-neutral-100 shadow-sm flex items-center justify-between hover:bg-neutral-50 active:scale-[0.98] transition-all text-left focus:outline-none"
             >
               <div className="flex items-center gap-4">
                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${customer.activeCount >= 2 ? 'bg-emerald-900 text-emerald-400' : 'bg-neutral-100 text-neutral-400'}`}>
@@ -137,7 +137,7 @@ const CustomersView: React.FC<CustomersViewProps> = ({ bookings, onCustomerSelec
             </button>
           ))
         ) : (
-          <div className="py-20 text-center bg-white rounded-[32px] border border-neutral-100">
+          <div className="py-20 text-center bg-white rounded-4xl border border-neutral-100">
             <p className="text-neutral-400 text-xs font-bold uppercase tracking-widest">No clients found</p>
           </div>
         )}

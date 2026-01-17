@@ -17,7 +17,7 @@ export const ManageTurfsView: React.FC<{
         <h3 className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">Your Grounds ({turfs.length})</h3>
         <button 
           onClick={onAdd}
-          className="flex items-center gap-2 px-4 h-9 bg-neutral-900 text-white rounded-full text-xs font-bold uppercase tracking-widest active:scale-95 transition-all"
+          className="flex cursor-pointer items-center gap-2 px-4 h-9 bg-neutral-900 text-white rounded-full text-xs font-bold uppercase tracking-widest active:scale-95 transition-all"
         >
           <Plus size={14} /> Add Ground
         </button>
@@ -28,7 +28,7 @@ export const ManageTurfsView: React.FC<{
           <button
             key={turf.id}
             onClick={() => onEdit(turf)}
-            className="w-full bg-white p-5 rounded-[28px] border border-neutral-100 shadow-sm flex items-center justify-between hover:bg-neutral-50 active:scale-[0.98] transition-all text-left"
+            className="w-full cursor-pointer bg-white p-5 rounded-[28px] border border-neutral-100 shadow-sm flex items-center justify-between hover:bg-neutral-50 active:scale-[0.98] transition-all text-left"
           >
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-neutral-50 text-neutral-600 rounded-2xl flex items-center justify-center border border-neutral-100">
@@ -73,14 +73,14 @@ export const EditTurfView: React.FC<{
 
   return (
     <div className="py-6 space-y-6 animate-in fade-in duration-300">
-      <div className="bg-white rounded-[32px] border border-neutral-100 p-8 space-y-8">
+      <div className="bg-white rounded-4xl border border-neutral-100 p-8 space-y-8">
         <div className="space-y-4">
           <div className="space-y-1.5">
             <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest px-1">Ground Name</label>
             <div className="relative">
               <MapPin size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" />
               <input
-                className="w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 transition-all font-bold"
+                className="text-black placeholder:text-[#a1a1a1] w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 transition-all font-bold"
                 placeholder="e.g. Lords Pitch 1"
                 value={formData.name}
                 onChange={e => setFormData({...formData, name: e.target.value})}
@@ -93,7 +93,7 @@ export const EditTurfView: React.FC<{
               <IndianRupee size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" />
               <input
                 type="number"
-                className="w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 transition-all font-bold"
+                className="text-black placeholder:text-[#a1a1a1] w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 transition-all font-bold"
                 value={formData.hourlyPrice}
                 onChange={e => setFormData({...formData, hourlyPrice: parseInt(e.target.value) || 0})}
               />
@@ -104,14 +104,14 @@ export const EditTurfView: React.FC<{
               <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest px-1">Opening</label>
               <div className="relative">
                 <Clock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
-                <input type="time" className="w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-10 pr-2 font-bold" value={formData.openingTime} onChange={e => setFormData({...formData, openingTime: e.target.value})} />
+                <input type="time" className="w-full h-14 text-black placeholder:text-[#a1a1a1] bg-neutral-50 border border-neutral-200 rounded-2xl pl-10 pr-2 font-bold" value={formData.openingTime} onChange={e => setFormData({...formData, openingTime: e.target.value})} />
               </div>
             </div>
             <div className="space-y-1.5">
               <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest px-1">Closing</label>
               <div className="relative">
                 <Clock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
-                <input type="time" className="w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-10 pr-2 font-bold" value={formData.closingTime} onChange={e => setFormData({...formData, closingTime: e.target.value})} />
+                <input type="time" className="w-full text-black placeholder:text-[#a1a1a1] h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-10 pr-2 font-bold" value={formData.closingTime} onChange={e => setFormData({...formData, closingTime: e.target.value})} />
               </div>
             </div>
           </div>
@@ -119,7 +119,7 @@ export const EditTurfView: React.FC<{
 
         <button 
           onClick={() => onSave(formData)}
-          className="w-full h-16 bg-neutral-900 text-white font-bold rounded-2xl shadow-xl shadow-neutral-900/10 active:scale-[0.98] transition-all text-lg"
+          className="w-full cursor-pointer h-16 bg-neutral-900 text-white font-bold rounded-2xl shadow-xl shadow-neutral-900/10 active:scale-[0.98] transition-all text-lg"
         >
           {turf ? 'Update Ground' : 'Add Ground'}
         </button>
@@ -129,7 +129,7 @@ export const EditTurfView: React.FC<{
           <div className="pt-4 border-t border-neutral-50">
             <button 
               onClick={() => setShowConfirm(true)}
-              className="w-full flex items-center justify-center gap-2 text-xs font-bold text-red-500 uppercase tracking-widest hover:text-red-600 p-2"
+              className="w-full cursor-pointer flex items-center justify-center gap-2 text-xs font-bold text-red-500 uppercase tracking-widest hover:text-red-600 p-2"
             >
               <Trash2 size={14} />
               Remove This Ground
@@ -139,15 +139,15 @@ export const EditTurfView: React.FC<{
       </div>
 
       {showConfirm && (
-        <div className="fixed inset-0 bg-neutral-900/60 backdrop-blur-sm z-[100] flex items-center justify-center p-6">
-          <div className="bg-white rounded-[32px] p-8 max-w-sm w-full space-y-6 animate-in zoom-in-95 duration-200">
+        <div className="fixed inset-0 bg-neutral-900/60 backdrop-blur-sm z-100 flex items-center justify-center p-6">
+          <div className="bg-white rounded-4xl p-8 max-w-sm w-full space-y-6 animate-in zoom-in-95 duration-200">
             <div className="text-center space-y-2">
               <h4 className="text-xl font-bold text-neutral-900">Delete Ground?</h4>
               <p className="text-sm text-neutral-500 font-medium leading-relaxed">Existing booking history will be preserved. This will remove the ground from your current dashboard.</p>
             </div>
             <div className="space-y-3">
-              <button onClick={() => onDelete(formData.id)} className="w-full h-14 bg-red-600 text-white font-bold rounded-2xl active:scale-95 transition-transform">Confirm Removal</button>
-              <button onClick={() => setShowConfirm(false)} className="w-full h-14 bg-neutral-100 text-neutral-600 font-bold rounded-2xl">Cancel</button>
+              <button onClick={() => onDelete(formData.id)} className="cursor-pointer w-full h-14 bg-red-600 text-white font-bold rounded-2xl active:scale-95 transition-transform">Confirm Removal</button>
+              <button onClick={() => setShowConfirm(false)} className="cursor-pointer w-full h-14 bg-neutral-100 text-neutral-600 font-bold rounded-2xl">Cancel</button>
             </div>
           </div>
         </div>
@@ -178,7 +178,7 @@ export const SubscriptionView: React.FC = () => {
 
   return (
     <div className="py-6 space-y-6 animate-in fade-in duration-300">
-      <div className="bg-neutral-900 rounded-[32px] p-8 text-white space-y-6 shadow-2xl">
+      <div className="bg-neutral-900 rounded-4xl p-8 text-white space-y-6 shadow-2xl">
         <div className="flex justify-between items-start">
           <div className="space-y-1">
             <span className="text-[10px] font-bold text-emerald-500 uppercase tracking-[0.2em]">Current Plan</span>
@@ -217,7 +217,7 @@ export const SubscriptionView: React.FC = () => {
         <button 
           onClick={handlePay}
           disabled={payLoading}
-          className="w-full h-14 bg-neutral-900 text-white font-bold rounded-2xl flex items-center justify-center gap-3 disabled:opacity-50 transition-all active:scale-[0.98]"
+          className="w-full cursor-pointer h-14 bg-neutral-900 text-white font-bold rounded-2xl flex items-center justify-center gap-3 disabled:opacity-50 transition-all active:scale-[0.98]"
         >
           <CreditCard size={20} />
           {payLoading ? 'Processing...' : 'Extend Pro Plan'}
@@ -231,7 +231,7 @@ export const SubscriptionView: React.FC = () => {
 export const LegalView: React.FC = () => {
   return (
     <div className="py-6 space-y-6 animate-in fade-in duration-300">
-      <div className="bg-white rounded-[32px] border border-neutral-100 overflow-hidden divide-y divide-neutral-50">
+      <div className="bg-white rounded-4xl border border-neutral-100 overflow-hidden divide-y divide-neutral-50">
         {['Privacy Policy', 'Terms of Service', 'Refund Policy', 'Data Security'].map(label => (
           <div key={label} className="p-6 space-y-4">
             <h4 className="font-bold text-neutral-900 flex items-center gap-2">

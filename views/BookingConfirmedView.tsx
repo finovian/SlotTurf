@@ -43,7 +43,7 @@ Thank you.`;
       <div className="w-full max-w-xs space-y-3">
         <button
           onClick={shareOnWhatsApp}
-          className="w-full h-14 bg-emerald-600 text-white font-bold rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-emerald-200/50 active:scale-95 transition-transform"
+          className="w-full h-14 bg-emerald-600 cursor-pointer text-white font-bold rounded-xl flex items-center justify-center gap-3 shadow-lg shadow-emerald-200/50 active:scale-95 transition-transform"
         >
           <MessageCircle size={20} />
           Share on WhatsApp
@@ -51,7 +51,7 @@ Thank you.`;
         
         <button
           onClick={onDone}
-          className="w-full h-14 bg-white text-neutral-700 font-semibold rounded-xl border border-neutral-200 active:bg-neutral-50 transition-colors"
+          className="w-full cursor-pointer h-14 bg-white text-neutral-700 font-semibold rounded-xl border border-neutral-200 active:bg-neutral-50 transition-colors"
         >
           Return to Dashboard
         </button>

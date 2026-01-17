@@ -58,7 +58,7 @@ const ProfileSetupView: React.FC<ProfileSetupViewProps> = ({ onComplete, mobile 
                 <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" />
                 <input
                   required
-                  className="w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 outline-none transition-all font-bold"
+                  className="w-full text-black h-14 placeholder:text-[#a1a1a1] bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 outline-none transition-all font-bold"
                   placeholder="e.g. Master Cricket Arena"
                   value={identity}
                   onChange={e => setIdentity(e.target.value)}
@@ -77,7 +77,7 @@ const ProfileSetupView: React.FC<ProfileSetupViewProps> = ({ onComplete, mobile 
                   <MapPin size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" />
                   <input
                     required
-                    className="w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 transition-all font-bold"
+                    className="w-full h-14 text-black bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 transition-all font-bold"
                     placeholder="e.g. Ground A"
                     value={formData.groundName}
                     onChange={e => setFormData({ ...formData, groundName: e.target.value })}
@@ -92,7 +92,7 @@ const ProfileSetupView: React.FC<ProfileSetupViewProps> = ({ onComplete, mobile 
                   <input
                     required
                     type="number"
-                    className="w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 outline-none transition-all font-bold"
+                    className="placeholder:text-[#a1a1a1] w-full text-black h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 outline-none transition-all font-bold"
                     value={formData.hourlyPrice}
                     onChange={e => setFormData({ ...formData, hourlyPrice: parseInt(e.target.value) || 0 })}
                   />
@@ -106,7 +106,7 @@ const ProfileSetupView: React.FC<ProfileSetupViewProps> = ({ onComplete, mobile 
                     <Clock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
                     <input
                       type="time"
-                      className="w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-10 pr-2 font-bold"
+                      className="w-full h-14 text-black bg-neutral-50 border border-neutral-200 rounded-2xl pl-10 pr-2 font-bold"
                       value={formData.openingTime}
                       onChange={e => setFormData({ ...formData, openingTime: e.target.value })}
                     />
@@ -118,7 +118,7 @@ const ProfileSetupView: React.FC<ProfileSetupViewProps> = ({ onComplete, mobile 
                     <Clock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400" />
                     <input
                       type="time"
-                      className="w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-10 pr-2 font-bold"
+                      className="w-full text-black h-14 placeholder:text-[#a1a1a1] bg-neutral-50 border border-neutral-200 rounded-2xl pl-10 pr-2 font-bold"
                       value={formData.closingTime}
                       onChange={e => setFormData({ ...formData, closingTime: e.target.value })}
                     />
@@ -130,7 +130,7 @@ const ProfileSetupView: React.FC<ProfileSetupViewProps> = ({ onComplete, mobile 
 
           <button
             type="submit"
-            className="w-full h-16 bg-neutral-900 text-white font-bold rounded-2xl shadow-xl shadow-neutral-900/10 active:scale-[0.98] transition-all text-lg"
+            className="w-full cursor-pointer h-16 bg-neutral-900 text-white font-bold rounded-2xl shadow-xl shadow-neutral-900/10 active:scale-[0.98] transition-all text-lg"
           >
             Launch Ground
           </button>

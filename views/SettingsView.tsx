@@ -36,7 +36,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ owner, turf, onLogout, onNa
         <h3 className="text-[10px] font-bold text-neutral-300 uppercase tracking-[0.2em] px-3">Active Business</h3>
         <button 
           onClick={() => onNavigate(View.EDIT_PROFILE)}
-          className="w-full bg-white border border-neutral-100 rounded-[32px] p-6 shadow-sm flex items-center justify-between hover:bg-neutral-50 active:bg-neutral-100 transition-all focus:outline-none"
+          className="w-full bg-white border cursor-pointer border-neutral-100 rounded-4xl p-6 shadow-sm flex items-center justify-between hover:bg-neutral-50 active:bg-neutral-100 transition-all focus:outline-none"
         >
           <div className="flex items-center gap-5">
             <div className="w-16 h-16 bg-neutral-900 rounded-3xl flex items-center justify-center text-white text-2xl font-bold shadow-xl shadow-neutral-900/10">
@@ -69,7 +69,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ owner, turf, onLogout, onNa
                 <button 
                   key={item.label} 
                   onClick={() => onNavigate(item.view)}
-                  className="w-full flex items-center justify-between p-5 hover:bg-neutral-50 transition-all active:bg-neutral-100 focus:outline-none"
+                  className="cursor-pointer w-full flex items-center justify-between p-5 hover:bg-neutral-50 transition-all active:bg-neutral-100 focus:outline-none"
                 >
                   <div className="flex items-center gap-4">
                     <div className="w-10 h-10 bg-neutral-50 text-neutral-600 rounded-xl flex items-center justify-center border border-neutral-100">
@@ -90,14 +90,14 @@ const SettingsView: React.FC<SettingsViewProps> = ({ owner, turf, onLogout, onNa
         <div className="space-y-3 pt-4">
           <button 
             onClick={onLogout}
-            className="w-full h-14 bg-white text-neutral-900 font-bold rounded-2xl border border-neutral-100 flex items-center justify-center gap-2 active:bg-neutral-50 transition-colors shadow-sm focus:outline-none"
+            className="cursor-pointer w-full h-14 bg-white text-neutral-900 font-bold rounded-2xl border border-neutral-100 flex items-center justify-center gap-2 active:bg-neutral-50 transition-colors shadow-sm focus:outline-none"
           >
             Logout Session
           </button>
           
           <button 
             onClick={onDeleteAccount}
-            className="w-full h-14 bg-white text-red-600 font-bold rounded-2xl border border-neutral-100 flex items-center justify-center gap-2 active:bg-red-50 transition-colors shadow-sm focus:outline-none"
+            className="cursor-pointer w-full h-14 bg-white text-red-600 font-bold rounded-2xl border border-neutral-100 flex items-center justify-center gap-2 active:bg-red-50 transition-colors shadow-sm focus:outline-none"
           >
             <Trash2 size={18} />
             Delete Account

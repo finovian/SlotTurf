@@ -44,7 +44,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onSendOTP, onVerifyOTP, isOTPStag
                   type="tel"
                   placeholder="9876543210"
                   autoFocus
-                  className="w-full text-black h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-14 pr-4 focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 outline-none transition-all text-lg font-bold tracking-widest"
+                  className="w-full text-black placeholder:text-[#a1a1a1] h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-14 pr-4 focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 outline-none transition-all font-bold tracking-widest"
                   value={mobile}
                   onChange={(e) => setMobile(e.target.value.replace(/\D/g, '').slice(0, 10))}
                   required
@@ -54,7 +54,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onSendOTP, onVerifyOTP, isOTPStag
 
             <button
               type="submit"
-              className="w-full h-14 bg-emerald-600 text-white font-bold rounded-2xl hover:bg-emerald-700 transition-colors active:scale-[0.98] shadow-lg shadow-emerald-600/10 text-lg"
+              className="w-full h-14 cursor-pointer bg-emerald-600 text-white font-bold rounded-2xl hover:bg-emerald-700 transition-colors active:scale-[0.98] shadow-lg shadow-emerald-600/10 text-lg"
             >
               Get Started
             </button>
@@ -82,7 +82,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onSendOTP, onVerifyOTP, isOTPStag
               maxLength={4}
               placeholder="0000"
               autoFocus
-              className="w-full h-16 bg-neutral-50 border border-neutral-200 rounded-2xl text-center text-3xl font-bold tracking-[0.5em] focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 outline-none transition-all"
+              className="w-full text-black placeholder:text-[#a1a1a1] h-16 bg-neutral-50 border border-neutral-200 rounded-2xl text-center text-3xl font-bold tracking-[0.5em] focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 outline-none transition-all"
               value={otp}
               onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 4))}
               required
@@ -91,7 +91,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onSendOTP, onVerifyOTP, isOTPStag
 
           <button
             type="submit"
-            className="w-full h-14 bg-emerald-600 text-white font-bold rounded-2xl hover:bg-emerald-700 transition-colors active:scale-[0.98] shadow-lg shadow-emerald-600/10 text-lg"
+            className="w-full cursor-pointer h-14 bg-emerald-600 text-white font-bold rounded-2xl hover:bg-emerald-700 transition-colors active:scale-[0.98] shadow-lg shadow-emerald-600/10 text-lg"
           >
             Verify & Login
           </button>
@@ -99,7 +99,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onSendOTP, onVerifyOTP, isOTPStag
           <button
             type="button"
             onClick={onBack}
-            className="w-full text-center text-xs font-bold text-neutral-400 uppercase tracking-widest hover:text-neutral-600"
+            className="w-full cursor-pointer text-center text-xs font-bold text-neutral-400 uppercase tracking-widest hover:text-neutral-600"
           >
             Change Mobile Number
           </button>

@@ -15,7 +15,7 @@ export default function EditTurfPage() {
 
   const turfId = params.id as string;
   const isNew = turfId === "new";
-  const turf = isNew ? null : turfs.find((t) => t.id === turfId);
+  const turf = isNew ? null : turfs.find((t) => t.id === turfId) || null;
 
   const handleSave = (turf: Turf) => {
     saveTurf.mutate(turf);
