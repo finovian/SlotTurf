@@ -1,4 +1,4 @@
-import { Booking, Turf, Owner } from '../types.ts';
+import { Booking, Turf } from '../types';
 
 const DELAY = 600;
 

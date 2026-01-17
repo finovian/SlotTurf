@@ -7,16 +7,7 @@ import {
   Settings,
   ChevronLeft
 } from 'lucide-react';
-import { 
-  Home, 
-  Calendar, 
-  Clock, 
-  BarChart3, 
-  Settings, 
-  ChevronLeft
-} from 'lucide-react';
 import { View } from '../types';
-import { useUIStore } from '../lib/store';
 import { useTurfs } from '@/hooks/use-data';
 
 interface LayoutProps {

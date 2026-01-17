@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import Link from "next/link";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUIStore } from "@/lib/store";
 import { useTurfs } from "@/hooks/use-data";
@@ -22,8 +21,6 @@ export default function SettingsPage() {
     reset();
     router.replace("/login");
   };
-;
-
   const handleNavigate = (view: View) => {
     const viewToHref: { [key in View]?: string } = {
       [View.EDIT_PROFILE]: "/dashboard/settings/profile",
@@ -44,15 +41,16 @@ export default function SettingsPage() {
       <SettingsView
         owner={owner}
         turf={turfs[0]} // Pass a default turf
-          onLogout={() => setShowConfirm('logout')}
+        onLogout={() => setShowConfirm("logout")}
         onNavigate={handleNavigate}
-        onDeleteAccount={() => setShowConfirm('delete')}
+        onDeleteAccount={() => setShowConfirm("delete")}
       />
       <ConfirmationModal
         isOpen={!!showConfirm}
         onClose={() => setShowConfirm(null)}
         onConfirm={() => {
-          if (showConfirm === "logout" || showConfirm === "delete") handleLogout();
+          if (showConfirm === "logout" || showConfirm === "delete")
+            handleLogout();
           setShowConfirm(null);
         }}
         title={showConfirm === "logout" ? "Logout?" : "Delete Account?"}

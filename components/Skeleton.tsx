@@ -1,6 +1,4 @@
 
-import React from 'react';
-
 export const CardSkeleton = () => (
   <div className="bg-white p-4 rounded-2xl border border-neutral-100 shadow-sm space-y-3 animate-pulse">
     <div className="flex justify-between">
@@ -40,14 +38,14 @@ export const RevenueSkeleton = () => (
       <div className="h-6 w-24 bg-neutral-100 rounded-lg" />
       <div className="h-10 w-32 bg-neutral-100 rounded-full" />
     </div>
-    <div className="bg-neutral-800 rounded-[32px] p-8 h-48" />
+    <div className="bg-neutral-800 rounded-4xl p-8 h-48" />
     <div className="grid grid-cols-2 gap-4">
       <div className="bg-white h-32 rounded-[28px] border border-neutral-100" />
       <div className="bg-white h-32 rounded-[28px] border border-neutral-100" />
     </div>
     <div className="space-y-4">
       <div className="h-4 w-32 bg-neutral-100 rounded ml-2" />
-      <div className="bg-white h-64 rounded-[32px] border border-neutral-100" />
+      <div className="bg-white h-64 rounded-4xl border border-neutral-100" />
     </div>
   </div>
 );
@@ -60,7 +58,7 @@ export const AvailabilitySkeleton = () => (
     </div>
     <div className="flex gap-3 overflow-hidden pb-4 px-1">
       {[1, 2, 3, 4, 5].map(i => (
-        <div key={i} className="flex-shrink-0 w-[72px] h-24 rounded-[28px] bg-white border border-neutral-100" />
+        <div key={i} className="shrink-0 w-18 h-24 rounded-[28px] bg-white border border-neutral-100" />
       ))}
     </div>
     <div className="space-y-4">
@@ -68,14 +66,14 @@ export const AvailabilitySkeleton = () => (
         <div className="h-4 w-24 bg-neutral-100 rounded" />
         <div className="h-4 w-16 bg-neutral-100 rounded" />
       </div>
-      <div className="bg-white h-96 rounded-[32px] border border-neutral-100" />
+      <div className="bg-white h-96 rounded-4xl border border-neutral-100" />
     </div>
   </div>
 );
 
 export const SubscriptionSkeleton = () => (
   <div className="py-6 space-y-6 animate-pulse">
-    <div className="bg-neutral-800 rounded-[32px] p-8 h-64 shadow-xl" />
+    <div className="bg-neutral-800 rounded-4xl p-8 h-64 shadow-xl" />
     <div className="bg-white rounded-3xl border border-neutral-100 p-8 space-y-6">
       <div className="h-6 w-1/2 bg-neutral-100 rounded" />
       <div className="space-y-2">

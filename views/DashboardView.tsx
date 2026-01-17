@@ -62,7 +62,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({ turfs, selectedTurfId, on
 
       {/* Metrics Section */}
       <section className="grid grid-cols-1 gap-4">
-        <div className="bg-neutral-900 p-8 rounded-[32px] shadow-xl shadow-neutral-900/10 text-white relative overflow-hidden">
+        <div className="bg-neutral-900 p-8 rounded-4xl shadow-xl shadow-neutral-900/10 text-white relative overflow-hidden">
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-2">
               <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Total Revenue</span>
