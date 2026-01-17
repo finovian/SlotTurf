@@ -1,6 +1,6 @@
 import React from 'react';
 import { Turf, View, Owner } from '../types';
-import { User, ChevronRight, MapPin, CreditCard, FileText, Trash2, Users, Store, Smartphone } from 'lucide-react';
+import { User, ChevronRight, MapPin, CreditCard, FileText, Trash2, Users, Smartphone, Zap } from 'lucide-react';
 
 interface SettingsViewProps {
   owner?: Owner;
@@ -11,6 +11,12 @@ interface SettingsViewProps {
 }
 
 const SettingsView: React.FC<SettingsViewProps> = ({ owner, turf, onLogout, onNavigate, onDeleteAccount }) => {
+  // Mock data for trial progress - in a real app this would come from the user's booking count
+  const trialUsed = 7;
+  const trialTotal = 10;
+  const trialRemaining = trialTotal - trialUsed;
+  const progressPercentage = (trialUsed / trialTotal) * 100;
+
   const sections = [
     {
       title: 'Business & CRM',
@@ -33,37 +39,71 @@ const SettingsView: React.FC<SettingsViewProps> = ({ owner, turf, onLogout, onNa
     <div className="py-4 space-y-8 animate-in fade-in duration-500">
       {/* Active Business Section */}
       <div className="space-y-3">
-        <h3 className="text-[10px] font-bold text-neutral-300 uppercase tracking-[0.2em] px-3">Active Business</h3>
+        <h3 className="text-[10px] font-bold text-neutral-300 uppercase tracking-[0.2em] px-3 text-left">Active Business</h3>
         <button 
           onClick={() => onNavigate(View.EDIT_PROFILE)}
-          className="w-full bg-white border cursor-pointer border-neutral-100 rounded-4xl p-6 shadow-sm flex items-center justify-between hover:bg-neutral-50 active:bg-neutral-100 transition-all focus:outline-none"
+          className="w-full bg-white border border-neutral-100 rounded-4xl p-6 shadow-sm flex items-center justify-between hover:bg-neutral-50 active:bg-neutral-100 transition-all focus:outline-none"
         >
-          <div className="flex items-center gap-5">
-            <div className="w-16 h-16 bg-neutral-900 rounded-3xl flex items-center justify-center text-white text-2xl font-bold shadow-xl shadow-neutral-900/10">
-              {owner?.businessName.charAt(0) || turf?.name.charAt(0)}
+          <div className="flex items-center gap-5 text-left">
+            <div className="w-16 h-16 bg-neutral-900 rounded-3xl flex items-center justify-center text-white text-2xl font-bold shadow-xl shadow-neutral-900/10 shrink-0">
+              {(owner?.businessName || turf.name).charAt(0)}
             </div>
-            <div className="text-left space-y-1">
-              <h2 className="text-xl font-bold text-neutral-900 tracking-tight">{owner?.businessName || turf.name}</h2>
-              <div className="space-y-0.5">
+            <div className="space-y-1 overflow-hidden">
+              <h2 className="text-xl font-bold text-neutral-900 tracking-tight truncate">
+                {owner?.businessName || turf.name}
+              </h2>
+              <div className="flex flex-col gap-0.5">
                 <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full" />
-                  <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest">{owner?.name || 'Authorized Owner'}</p>
+                  <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full shrink-0" />
+                  <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest truncate">
+                    {owner?.name || 'Authorized Owner'}
+                  </p>
                 </div>
                 <div className="flex items-center gap-2 ml-3.5">
-                  <p className="text-[10px] text-neutral-400 font-bold tracking-widest">+91 {owner?.mobile || '9XXXXXXXXX'}</p>
+                  <p className="text-[10px] text-neutral-500 font-bold tracking-widest">
+                    +91 {owner?.mobile || '9XXXXXXXXX'}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-          <ChevronRight size={20} className="text-neutral-300" />
+          <ChevronRight size={20} className="text-neutral-300 shrink-0" />
         </button>
       </div>
 
+      {/* Free Trial Progress Card */}
+      <div className="px-1">
+        <div className="bg-emerald-50/50 border border-emerald-100/50 rounded-[28px] p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center">
+                <Zap size={16} fill="currentColor" />
+              </div>
+              <div className="text-left">
+                <h4 className="text-xs font-bold text-neutral-900">Free Trial Active</h4>
+                <p className="text-[9px] font-bold text-emerald-600 uppercase tracking-widest">{trialRemaining} Free Bookings Left</p>
+              </div>
+            </div>
+            <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest shrink-0">{trialUsed}/{trialTotal}</span>
+          </div>
+          
+          <div className="space-y-2">
+            <div className="h-2 w-full bg-emerald-100 rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-emerald-500 rounded-full transition-all duration-1000" 
+                style={{ width: `${progressPercentage}%` }}
+              />
+            </div>
+            <p className="text-[9px] text-neutral-400 font-medium text-center">Your professional features will lock after 10 free bookings.</p>
+          </div>
+        </div>
+      </div>
+
       {/* Settings Menu */}
-      <div className="space-y-8">
+      <div className="space-y-8 pb-8">
         {sections.map(section => (
           <div key={section.title} className="space-y-3">
-            <h3 className="text-[10px] font-bold text-neutral-300 uppercase tracking-[0.2em] px-3">{section.title}</h3>
+            <h3 className="text-[10px] font-bold text-neutral-300 uppercase tracking-[0.2em] px-3 text-left">{section.title}</h3>
             <div className="bg-white rounded-[28px] border border-neutral-100 shadow-sm overflow-hidden divide-y divide-neutral-50">
               {section.items.map(item => (
                 <button 
@@ -71,16 +111,16 @@ const SettingsView: React.FC<SettingsViewProps> = ({ owner, turf, onLogout, onNa
                   onClick={() => onNavigate(item.view)}
                   className="cursor-pointer w-full flex items-center justify-between p-5 hover:bg-neutral-50 transition-all active:bg-neutral-100 focus:outline-none"
                 >
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-neutral-50 text-neutral-600 rounded-xl flex items-center justify-center border border-neutral-100">
+                  <div className="flex items-center gap-4 text-left">
+                    <div className="w-10 h-10 bg-neutral-50 text-neutral-600 rounded-xl flex items-center justify-center border border-neutral-100 shrink-0">
                       <item.icon size={20} />
                     </div>
-                    <div className="text-left">
+                    <div>
                       <p className="text-sm font-bold text-neutral-900">{item.label}</p>
                       <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-tight">{item.detail}</p>
                     </div>
                   </div>
-                  <ChevronRight size={18} className="text-neutral-300" />
+                  <ChevronRight size={18} className="text-neutral-300 shrink-0" />
                 </button>
               ))}
             </div>
