@@ -1,0 +1,112 @@
+
+import React, { useState } from 'react';
+
+interface LoginViewProps {
+  onSendOTP: (mobile: string) => void;
+  onVerifyOTP: (otp: string) => void;
+  isOTPStage: boolean;
+  tempMobile?: string;
+  onBack: () => void;
+}
+
+const LoginView: React.FC<LoginViewProps> = ({ onSendOTP, onVerifyOTP, isOTPStage, tempMobile, onBack }) => {
+  const [mobile, setMobile] = useState('');
+  const [otp, setOtp] = useState('');
+
+  const handleMobileSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (mobile.length === 10) onSendOTP(mobile);
+  };
+
+  const handleOTPSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (otp.length === 4) onVerifyOTP(otp);
+  };
+
+  if (!isOTPStage) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 animate-in fade-in duration-500">
+        <div className="w-full max-w-sm space-y-12">
+          <div className="text-center space-y-4">
+            <div className="w-14 h-14 bg-neutral-900 rounded-2xl flex items-center justify-center text-white font-bold text-2xl mx-auto shadow-xl">T</div>
+            <div className="space-y-1">
+              <h1 className="text-2xl font-bold tracking-tight text-neutral-900">TurfFlow Pro</h1>
+              <p className="text-neutral-500 text-sm">Enter your mobile number to get started.</p>
+            </div>
+          </div>
+
+          <form onSubmit={handleMobileSubmit} className="space-y-6">
+            <div className="space-y-1.5">
+              <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest px-1">Mobile Number</label>
+              <div className="relative">
+                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 font-semibold">+91</span>
+                 <input
+                  type="tel"
+                  placeholder="9876543210"
+                  autoFocus
+                  className="w-full text-black h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-14 pr-4 focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 outline-none transition-all text-lg font-bold tracking-widest"
+                  value={mobile}
+                  onChange={(e) => setMobile(e.target.value.replace(/\D/g, '').slice(0, 10))}
+                  required
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full h-14 bg-emerald-600 text-white font-bold rounded-2xl hover:bg-emerald-700 transition-colors active:scale-[0.98] shadow-lg shadow-emerald-600/10 text-lg"
+            >
+              Get Started
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 animate-in slide-in-from-right duration-300">
+      <div className="w-full max-w-sm space-y-10">
+        <div className="text-center space-y-4">
+          <h1 className="text-2xl font-bold tracking-tight text-neutral-900">Verify OTP</h1>
+          <p className="text-neutral-500 text-sm">
+            Sent to <span className="text-neutral-900 font-semibold">+91 {tempMobile}</span>
+          </p>
+        </div>
+
+        <form onSubmit={handleOTPSubmit} className="space-y-6">
+          <div className="space-y-1.5">
+            <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest px-1 text-center block w-full">Verification Code</label>
+            <input
+              type="tel"
+              maxLength={4}
+              placeholder="0000"
+              autoFocus
+              className="w-full h-16 bg-neutral-50 border border-neutral-200 rounded-2xl text-center text-3xl font-bold tracking-[0.5em] focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 outline-none transition-all"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value.replace(/\D/g, '').slice(0, 4))}
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full h-14 bg-emerald-600 text-white font-bold rounded-2xl hover:bg-emerald-700 transition-colors active:scale-[0.98] shadow-lg shadow-emerald-600/10 text-lg"
+          >
+            Verify & Login
+          </button>
+
+          <button
+            type="button"
+            onClick={onBack}
+            className="w-full text-center text-xs font-bold text-neutral-400 uppercase tracking-widest hover:text-neutral-600"
+          >
+            Change Mobile Number
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default LoginView;
