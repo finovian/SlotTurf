@@ -63,7 +63,7 @@ const AdminView: React.FC = () => {
             { label: 'Pending Suspensions', val: '12', icon: Users, color: 'text-red-600' },
             { label: 'System Health', val: '99.9%', icon: Shield, color: 'text-neutral-900' },
           ].map(m => (
-            <div key={m.label} className="bg-white p-6 rounded-[24px] border border-neutral-200 shadow-sm">
+            <div key={m.label} className="bg-white p-6 rounded-3xl border border-neutral-200 shadow-sm">
               <div className="flex justify-between items-start mb-4">
                 <span className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">{m.label}</span>
                 <m.icon size={18} className={m.color} />
@@ -74,7 +74,7 @@ const AdminView: React.FC = () => {
         </div>
 
         {/* Owners Table */}
-        <div className="bg-white rounded-[32px] border border-neutral-200 shadow-sm overflow-hidden">
+        <div className="bg-white rounded-4xl border border-neutral-200 shadow-sm overflow-hidden">
           <div className="p-6 border-b border-neutral-100">
             <h2 className="text-lg font-bold">Registered Owners</h2>
           </div>

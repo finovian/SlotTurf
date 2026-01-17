@@ -53,7 +53,7 @@ const RevenueView: React.FC<RevenueViewProps> = ({ bookings, turfs, selectedTurf
 
       {/* High-Level Stats */}
       <div className="grid grid-cols-1 gap-4">
-        <div className="bg-neutral-900 rounded-[32px] p-8 text-white shadow-xl shadow-neutral-900/10 relative overflow-hidden">
+        <div className="bg-neutral-900 rounded-4xl p-8 text-white shadow-xl shadow-neutral-900/10 relative overflow-hidden">
           <p className="text-neutral-500 text-[10px] font-bold uppercase tracking-widest mb-1 relative z-10">Total Revenue</p>
           <div className="flex items-end gap-2 relative z-10">
             <h2 className="text-4xl font-bold tracking-tight">{formatCurrency(totalRevenue)}</h2>
@@ -99,7 +99,7 @@ const RevenueView: React.FC<RevenueViewProps> = ({ bookings, turfs, selectedTurf
         <h3 className="text-[10px] font-bold text-neutral-400 uppercase tracking-[0.2em] flex items-center gap-2 px-3">
           <Calendar size={14} /> Transaction Log
         </h3>
-        <div className="bg-white rounded-[32px] border border-neutral-100 shadow-sm overflow-hidden divide-y divide-neutral-50">
+        <div className="bg-white rounded-4xl border border-neutral-100 shadow-sm overflow-hidden divide-y divide-neutral-50">
           {activeBookings.length > 0 ? (
              activeBookings.map(b => {
                const turf = turfs.find(t => t.id === b.turfId);

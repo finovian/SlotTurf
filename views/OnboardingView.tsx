@@ -27,7 +27,7 @@ const OnboardingView: React.FC<OnboardingViewProps> = ({ onComplete }) => {
     <div className="min-h-screen bg-white p-8 flex flex-col items-center justify-center animate-in fade-in duration-700">
       <div className="w-full max-w-sm space-y-12">
         <div className="text-center space-y-4">
-          <div className="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-[32px] flex items-center justify-center mx-auto shadow-sm">
+          <div className="w-20 h-20 bg-emerald-50 text-emerald-600 rounded-4xl flex items-center justify-center mx-auto shadow-sm">
             <CheckCircle2 size={40} />
           </div>
           <div className="space-y-1">

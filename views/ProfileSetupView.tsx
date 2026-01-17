@@ -39,7 +39,7 @@ const ProfileSetupView: React.FC<ProfileSetupViewProps> = ({ onComplete, mobile 
     <div className="min-h-screen bg-white p-6 pb-12 flex flex-col items-center animate-in fade-in duration-700">
       <div className="w-full max-w-sm space-y-10 mt-8">
         <div className="text-center space-y-3">
-          <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-[24px] flex items-center justify-center mx-auto shadow-sm">
+          <div className="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-3xl flex items-center justify-center mx-auto shadow-sm">
             <Store size={32} />
           </div>
           <div className="space-y-1">
@@ -92,7 +92,7 @@ const ProfileSetupView: React.FC<ProfileSetupViewProps> = ({ onComplete, mobile 
                   <input
                     required
                     type="number"
-                    className="placeholder:text-[#a1a1a1] w-full text-black h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 outline-none transition-all font-bold"
+                    className="placeholder:text-[#a1a1a1] w-full text-black h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 outline-none focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 transition-all font-bold"
                     value={formData.hourlyPrice}
                     onChange={e => setFormData({ ...formData, hourlyPrice: parseInt(e.target.value) || 0 })}
                   />

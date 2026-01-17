@@ -46,11 +46,11 @@ const SettingsView: React.FC<SettingsViewProps> = ({ owner, turf, onLogout, onNa
         >
           <div className="flex items-center gap-5 text-left">
             <div className="w-16 h-16 bg-neutral-900 rounded-3xl flex items-center justify-center text-white text-2xl font-bold shadow-xl shadow-neutral-900/10 shrink-0">
-              {(owner?.businessName || turf.name).charAt(0)}
+              {(owner?.businessName || turf?.name)?.charAt(0)}
             </div>
             <div className="space-y-1 overflow-hidden">
               <h2 className="text-xl font-bold text-neutral-900 tracking-tight truncate">
-                {owner?.businessName || turf.name}
+                {owner?.businessName || turf?.name}
               </h2>
               <div className="flex flex-col gap-0.5">
                 <div className="flex items-center gap-2">
@@ -103,12 +103,12 @@ const SettingsView: React.FC<SettingsViewProps> = ({ owner, turf, onLogout, onNa
       <div className="space-y-8 pb-8">
         {sections.map(section => (
           <div key={section.title} className="space-y-3">
-            <h3 className="text-[10px] font-bold text-neutral-300 uppercase tracking-[0.2em] px-3 text-left">{section.title}</h3>
+            <h3 className="text-[10px] font-bold text-neutral-300 uppercase tracking-[0.2em] px-3 text-left">{section?.title}</h3>
             <div className="bg-white rounded-[28px] border border-neutral-100 shadow-sm overflow-hidden divide-y divide-neutral-50">
-              {section.items.map(item => (
+              {section?.items?.map(item => (
                 <button 
-                  key={item.label} 
-                  onClick={() => onNavigate(item.view)}
+                  key={item?.label} 
+                  onClick={() => onNavigate(item?.view)}
                   className="cursor-pointer w-full flex items-center justify-between p-5 hover:bg-neutral-50 transition-all active:bg-neutral-100 focus:outline-none"
                 >
                   <div className="flex items-center gap-4 text-left">
@@ -116,8 +116,8 @@ const SettingsView: React.FC<SettingsViewProps> = ({ owner, turf, onLogout, onNa
                       <item.icon size={20} />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-neutral-900">{item.label}</p>
-                      <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-tight">{item.detail}</p>
+                      <p className="text-sm font-bold text-neutral-900">{item?.label}</p>
+                      <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-tight">{item?.detail}</p>
                     </div>
                   </div>
                   <ChevronRight size={18} className="text-neutral-300 shrink-0" />

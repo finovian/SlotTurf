@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { AppState, Owner, Booking } from '../types.ts';
+import { AppState, Owner, Booking } from '../types';
 
 interface UIStore extends Omit<AppState, 'currentView'> {
   setLoggedIn: (isLoggedIn: boolean) => void;
