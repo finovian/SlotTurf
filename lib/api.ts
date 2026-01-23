@@ -1,4 +1,5 @@
-import { Booking, Turf } from '../types';
+import { Booking, Turf } from "../types";
+import { apiFetch } from "./apiClient";
 
 const DELAY = 600;
 
@@ -13,43 +14,77 @@ const setLocal = <T>(key: string, val: T): void => {
 };
 
 export const api = {
+ requestOTP: async (mobile: string): Promise<{ success: boolean }> => {
+    return apiFetch("/auth/request-otp", {
+      method: "POST",
+      body: JSON.stringify({
+        identifier: mobile,
+      }),
+    });
+  },
+
+  verifyOTP: async (
+    mobile: string,
+    otp: string,
+  ): Promise<{ user_id: string; status: string }> => {
+    return apiFetch("/auth/verify-otp", {
+      method: "POST",
+      body: JSON.stringify({
+        identifier: mobile,
+        otp,
+      }),
+    });
+  },
+
   fetchTurfs: async (): Promise<Turf[]> => {
-    await new Promise(r => setTimeout(r, DELAY));
-    return getLocal('turfs', []);
+    await new Promise((r) => setTimeout(r, DELAY));
+    return getLocal("turfs", []);
   },
 
   fetchBookings: async (): Promise<Booking[]> => {
-    await new Promise(r => setTimeout(r, DELAY));
-    return getLocal('bookings', []);
+    await new Promise((r) => setTimeout(r, DELAY));
+    return getLocal("bookings", []);
   },
 
   saveTurf: async (turf: Turf): Promise<Turf> => {
-    await new Promise(r => setTimeout(r, DELAY));
-    const turfs = getLocal<Turf[]>('turfs', []);
-    const exists = turfs.findIndex(t => t.id === turf.id);
-    const updated = exists >= 0 ? turfs.map(t => t.id === turf.id ? turf : t) : [...turfs, turf];
-    setLocal('turfs', updated);
+    await new Promise((r) => setTimeout(r, DELAY));
+    const turfs = getLocal<Turf[]>("turfs", []);
+    const exists = turfs.findIndex((t) => t.id === turf.id);
+    const updated =
+      exists >= 0
+        ? turfs.map((t) => (t.id === turf.id ? turf : t))
+        : [...turfs, turf];
+    setLocal("turfs", updated);
     return turf;
   },
 
   deleteTurf: async (id: string): Promise<void> => {
-    await new Promise(r => setTimeout(r, DELAY));
-    const turfs = getLocal<Turf[]>('turfs', []);
-    setLocal('turfs', turfs.filter(t => t.id !== id));
+    await new Promise((r) => setTimeout(r, DELAY));
+    const turfs = getLocal<Turf[]>("turfs", []);
+    setLocal(
+      "turfs",
+      turfs.filter((t) => t.id !== id),
+    );
   },
 
   saveBooking: async (booking: Booking): Promise<Booking> => {
-    await new Promise(r => setTimeout(r, DELAY));
-    const bookings = getLocal<Booking[]>('bookings', []);
-    const exists = bookings.findIndex(b => b.id === booking.id);
-    const updated = exists >= 0 ? bookings.map(b => b.id === booking.id ? booking : b) : [booking, ...bookings];
-    setLocal('bookings', updated);
+    await new Promise((r) => setTimeout(r, DELAY));
+    const bookings = getLocal<Booking[]>("bookings", []);
+    const exists = bookings.findIndex((b) => b.id === booking.id);
+    const updated =
+      exists >= 0
+        ? bookings.map((b) => (b.id === booking.id ? booking : b))
+        : [booking, ...bookings];
+    setLocal("bookings", updated);
     return booking;
   },
 
   cancelBooking: async (id: string): Promise<void> => {
-    await new Promise(r => setTimeout(r, DELAY));
-    const bookings = getLocal<Booking[]>('bookings', []);
-    setLocal('bookings', bookings.map(b => b.id === id ? { ...b, status: 'cancelled' } : b));
+    await new Promise((r) => setTimeout(r, DELAY));
+    const bookings = getLocal<Booking[]>("bookings", []);
+    setLocal(
+      "bookings",
+      bookings.map((b) => (b.id === id ? { ...b, status: "cancelled" } : b)),
+    );
   },
 };

@@ -7,21 +7,23 @@ import AvailabilityView from "@/views/AvailabilityView";
 import { useRouter } from "next/navigation";
 
 
+
 export default function AvailabilityPage() {
   const router = useRouter();
   const { selectedTurfId, setSelectedTurfId, setEditingBooking } = useUIStore();
   const { data: turfs = [] } = useTurfs();
+  console.log('turfs', turfs)
   const { data: bookings = [] } = useBookings();
   const cancelBooking = useCancelBooking();
 
   const handleSlotClick = () => {
     setEditingBooking(null);
-    router.push("/dashboard/add-booking");
+    router.push("/dashboard/availability/add-booking");
   };
 
   const handleEditBooking = (booking: Booking) => {
     setEditingBooking(booking);
-    router.push("/dashboard/add-booking");
+    router.push("/dashboard/availability/add-booking");
   };
 
   return (

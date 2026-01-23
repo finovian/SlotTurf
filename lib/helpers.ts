@@ -1,4 +1,4 @@
-import { format, parse, differenceInMinutes, addMinutes, isAfter, isBefore, startOfDay, endOfDay } from 'date-fns';
+import { format, parse, differenceInMinutes, addMinutes, isAfter, isBefore, startOfDay, endOfDay, subDays } from 'date-fns';
 import { toZonedTime } from 'date-fns-tz';
 
 const TIMEZONE = 'Asia/Kolkata';
@@ -34,4 +34,24 @@ export const generateTimeSlots = (opening: string, closing: string): string[] =>
 
 export const getISTDate = (date: Date = new Date()): Date => {
   return toZonedTime(date, TIMEZONE);
+};
+
+export const isDateInRange = (dateStr: string, start: Date, end: Date): boolean => {
+  const date = startOfDay(new Date(dateStr));
+  return (date.getTime() >= start.getTime() && date.getTime() <= end.getTime());
+};
+
+export const getRangeDates = (preset: string): { start: Date; end: Date } => {
+  const end = startOfDay(new Date());
+  let start = end;
+
+  switch (preset) {
+    case '7d': start = subDays(end, 6); break;
+    case '30d': start = subDays(end, 29); break;
+    case '3m': start = subDays(end, 89); break;
+    case '6m': start = subDays(end, 179); break;
+    case '1y': start = subDays(end, 364); break;
+    default: start = end;
+  }
+  return { start, end };
 };

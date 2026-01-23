@@ -2,6 +2,19 @@ import { api } from '@/lib/api';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 
+export const useRequestOTP = () => {
+  return useMutation({
+    mutationFn: api.requestOTP,
+  });
+};
+
+export const useVerifyOTP = () => {
+  return useMutation({
+    mutationFn: ({ mobile, otp }: { mobile: string; otp: string }) =>
+      api.verifyOTP(mobile, otp),
+  });
+};
+
 export const useTurfs = () => {
   return useQuery({
     queryKey: ['turfs'],

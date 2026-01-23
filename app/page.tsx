@@ -19,5 +19,5 @@ export default function Home() {
     }
   }, [isLoggedIn, owner, router]);
 
-  return <CardSkeleton />;
+  return null;
 }

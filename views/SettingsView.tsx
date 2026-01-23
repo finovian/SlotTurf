@@ -42,7 +42,7 @@ const SettingsView: React.FC<SettingsViewProps> = ({ owner, turf, onLogout, onNa
         <h3 className="text-[10px] font-bold text-neutral-300 uppercase tracking-[0.2em] px-3 text-left">Active Business</h3>
         <button 
           onClick={() => onNavigate(View.EDIT_PROFILE)}
-          className="w-full bg-white border border-neutral-100 rounded-4xl p-6 shadow-sm flex items-center justify-between hover:bg-neutral-50 active:bg-neutral-100 transition-all focus:outline-none"
+          className="cursor-pointer w-full bg-white border border-neutral-100 rounded-4xl p-6 shadow-sm flex items-center justify-between hover:bg-neutral-50 active:bg-neutral-100 transition-all focus:outline-none"
         >
           <div className="flex items-center gap-5 text-left">
             <div className="w-16 h-16 bg-neutral-900 rounded-3xl flex items-center justify-center text-white text-2xl font-bold shadow-xl shadow-neutral-900/10 shrink-0">
@@ -55,15 +55,11 @@ const SettingsView: React.FC<SettingsViewProps> = ({ owner, turf, onLogout, onNa
               <div className="flex flex-col gap-0.5">
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full shrink-0" />
-                  <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest truncate">
-                    {owner?.name || 'Authorized Owner'}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2 ml-3.5">
-                  <p className="text-[10px] text-neutral-500 font-bold tracking-widest">
+                <p className="text-[10px] text-neutral-500 font-bold tracking-widest">
                     +91 {owner?.mobile || '9XXXXXXXXX'}
                   </p>
                 </div>
+ 
               </div>
             </div>
           </div>
