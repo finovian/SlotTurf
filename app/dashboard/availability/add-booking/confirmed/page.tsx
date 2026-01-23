@@ -1,9 +1,9 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useUIStore } from "../../../lib/store";
-import { useBookings } from "../../../hooks/use-data";
-import BookingConfirmedView from "../../../views/BookingConfirmedView";
+import { useUIStore } from "../../../../../lib/store";
+import { useBookings } from "../../../../../hooks/use-data";
+import BookingConfirmedView from "../../../../../views/BookingConfirmedView";
 
 // A simple mock booking for display purposes, as we are not passing the ID.
 const mockBooking = {

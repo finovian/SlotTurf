@@ -1,10 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useUIStore } from "../../../lib/store";
-import { useTurfs, useSaveBooking } from "../../../hooks/use-data";
-import AddBookingView from "../../../views/AddBookingView";
-import { Booking } from "../../../types";
+import { useUIStore } from "../../../../lib/store";
+import { useTurfs, useSaveBooking } from "../../../../hooks/use-data";
+import AddBookingView from "../../../../views/AddBookingView";
+import { Booking } from "../../../../types";
 
 export default function AddBookingPage() {
   const router = useRouter();
@@ -21,7 +21,7 @@ export default function AddBookingPage() {
   const handleConfirmBooking = (booking: Booking) => {
     // In a real app, you might want to pass the booking id
     // to the confirmation page, but for now we'll just navigate.
-    router.push("/dashboard/confirmed");
+    router.push("/dashboard/availability/add-booking/confirmed");
   };
 
   if (!turf) {

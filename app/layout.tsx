@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Ubuntu } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
+import Toast from "@/components/Toast";
 
 const ubuntu = Ubuntu({
   subsets: ["latin"],
@@ -23,6 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${ubuntu.variable} antialiased`}>
         <Providers>{children}</Providers>
+        <Toast />
       </body>
     </html>
   );
