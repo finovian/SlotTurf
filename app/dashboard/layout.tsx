@@ -1,41 +1,32 @@
 "use client";
 
-import React, { useState, useEffect, use } from "react";
+import { useStore } from "@/lib/store";
 import {
-  Home,
-  Calendar,
-  Clock,
   BarChart3,
-  Settings,
-  ChevronLeft,
-  LayoutGrid,
   Bell,
+  Calendar,
+  ChevronLeft,
+  Clock,
+  Home,
   Search as SearchIcon,
+  Settings,
 } from "lucide-react";
-import { View } from "@/types";
-import { useStore, useUIStore } from "@/lib/store";
-import { useTurfs } from "@/hooks/use-data";
-import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 interface LayoutProps {
   children?: React.ReactNode;
-  currentView: View;
-  onNavigate: (view: View) => void;
 }
 
 export default function Layout({
   children,
-  currentView,
-  onNavigate,
 }: LayoutProps) {
   const { state } = useStore();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const router = useRouter();
 
-  const { owner } = useUIStore();
-  const { data: turfs = [] } = useTurfs();
   const pathname = usePathname();
 
   useEffect(() => {
