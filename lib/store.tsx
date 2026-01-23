@@ -1,7 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { AppState, Owner, Booking } from '../types';
+import { AppState, Owner, Booking, Turf } from '../types';
 import { useBookings, useCancelBooking, useSaveBooking, useSaveTurf, useTurfs } from '@/hooks/use-data';
+import { View } from 'lucide-react';
 
 
 interface Toast {
@@ -10,15 +11,18 @@ interface Toast {
   id: number;
 }
 interface UIStore extends Omit<AppState, 'currentView'> {
+  currentView: any;
   toast: Toast | null;
   setLoggedIn: (isLoggedIn: boolean) => void;
   setOwner: (owner: Owner | undefined) => void;
   setSelectedTurfId: (id: string | null) => void;
   setTempMobile: (mobile: string | undefined) => void;
   setEditingBooking: (booking: Booking | null) => void;
+  setCurrentView: (view: any) => void;
   reset: () => void;
-    showToast: (message: string, type?: 'success' | 'error' | 'info') => void;
+  showToast: (message: string, type?: 'success' | 'error' | 'info') => void;
   clearToast: () => void;
+  
 }
 
 const STORAGE_KEY = 'turfflow_ui_v6';
@@ -31,6 +35,7 @@ export const useUIStore = create<UIStore>()(
       selectedTurfId: null,
       tempMobile: undefined,
       editingBooking: null,
+      currentView: undefined,
       subscriptionActive: true,
       toast: null,
 
@@ -38,6 +43,7 @@ export const useUIStore = create<UIStore>()(
       setOwner: (owner) => set({ owner }),
       setSelectedTurfId: (id) => set({ selectedTurfId: id }),
       setTempMobile: (mobile) => set({ tempMobile: mobile }),
+      setCurrentView: (view) => set({ currentView: view }),
 
       showToast: (message, type = 'success') => {
         const id = Date.now();
@@ -53,7 +59,8 @@ export const useUIStore = create<UIStore>()(
         owner: undefined,
         selectedTurfId: null,
         tempMobile: undefined,
-        editingBooking: null
+        editingBooking: null,
+        currentView: undefined
       }),
     }),
     {
@@ -62,6 +69,7 @@ export const useUIStore = create<UIStore>()(
         isLoggedIn: state.isLoggedIn,
         owner: state.owner,
         selectedTurfId: state.selectedTurfId,
+        currentView: state.currentView,
       }),
     }
   )
@@ -123,7 +131,7 @@ export const useStore = () => {
       saveTurfMutation.mutate(firstTurf);
       ui.setOwner(newOwner);
       ui.setSelectedTurfId(firstTurf.id);
-      ui.setCurrentView(View.DASHBOARD);
+      ui.setCurrentView('DASHBOARD');
       ui.showToast('Profile created successfully!', 'success');
     }
   };
