@@ -3,7 +3,6 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useUIStore } from "../lib/store";
-import { CardSkeleton } from "../components/Skeleton";
 
 export default function Home() {
   const router = useRouter();
