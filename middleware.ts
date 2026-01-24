@@ -9,7 +9,11 @@ export function middleware(request: NextRequest) {
 
   // Routes
   const isLoginPage = pathname === "/login";
-  const isProtectedRoute = pathname.startsWith("/dashboard");
+  const isProtectedRoute =
+    pathname.startsWith("/dashboard") ||
+    pathname.startsWith("/profile-setup") ||
+    pathname === "/" ||
+    pathname.startsWith("/admin");
 
   // 🚫 Not logged in → trying to access protected page
   if (!accessToken && isProtectedRoute) {
