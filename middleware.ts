@@ -1,41 +1,25 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+const PUBLIC_ROUTES = ["/login", "/subscribe", "/verify"];
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-
-  // Read token from cookies
   const accessToken = request.cookies.get("access_token")?.value;
 
-  // Routes
-  const isLoginPage = pathname === "/login";
-  const isProtectedRoute =
-    pathname.startsWith("/dashboard") ||
-    pathname.startsWith("/profile-setup") ||
-    pathname === "/" ||
-    pathname.startsWith("/admin");
+  const isPublicRoute = PUBLIC_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(route),
+  );
 
-  // 🚫 Not logged in → trying to access protected page
-  if (!accessToken && isProtectedRoute) {
-    const loginUrl = new URL("/login", request.url);
-    return NextResponse.redirect(loginUrl);
+  // 🚫 Not logged in → trying to access protected route
+  if (!accessToken && !isPublicRoute) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // ✅ Logged in → trying to access login page
-  if (accessToken && isLoginPage) {
-    const dashboardUrl = new URL("/dashboard", request.url);
-    return NextResponse.redirect(dashboardUrl);
-  }
-
+  // ✅ Logged in → allow everything (no forced redirect)
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    "/login",
-    "/dashboard/:path*",
-    "/profile-setup",
-    "/",
-    "/admin/:path*",
-  ],
+  matcher: ["/((?!_next|favicon.ico|api).*)"],
 };
