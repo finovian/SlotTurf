@@ -39,8 +39,6 @@ export default function SettingsPage() {
   return (
     <>
       <SettingsView
-        owner={owner}
-        turf={turfs[0]} // Pass a default turf
         onLogout={() => setShowConfirm("logout")}
         onNavigate={handleNavigate}
         onDeleteAccount={() => setShowConfirm("delete")}

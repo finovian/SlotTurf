@@ -172,7 +172,7 @@ export default function Layout({
               <span className="absolute top-2 right-2 w-2 h-2 bg-emerald-500 rounded-full border-2 border-white" />
             </button>
             <div className="w-10 h-10 bg-neutral-900 rounded-2xl flex items-center justify-center text-white font-bold text-sm shadow-lg shadow-neutral-900/10 cursor-pointer">
-              {state.owner?.name.charAt(0) || "U"}
+              {state.owner?.owner_name?.charAt(0) || "U"}
             </div>
           </div>
         </header>

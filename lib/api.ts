@@ -1,4 +1,4 @@
-import { Booking, Turf } from "../types";
+import { Booking, GroundType, Turf } from "../types";
 import { apiFetch } from "./apiClient";
 
 const DELAY = 600;
@@ -14,8 +14,8 @@ const setLocal = <T>(key: string, val: T): void => {
 };
 
 export const api = {
- requestOTP: async (mobile: string): Promise<{ success: boolean }> => {
-    return apiFetch("/auth/request-otp", {
+  requestOTP: async (mobile: string): Promise<{ success: boolean }> => {
+    return apiFetch("/auth/login", {
       method: "POST",
       body: JSON.stringify({
         identifier: mobile,
@@ -26,13 +26,34 @@ export const api = {
   verifyOTP: async (
     mobile: string,
     otp: string,
-  ): Promise<{ user_id: string; status: string }> => {
-    return apiFetch("/auth/verify-otp", {
+  ): Promise<{ isActive: string; status: string }> => {
+    return apiFetch("/auth/verify", {
       method: "POST",
       body: JSON.stringify({
         identifier: mobile,
         otp,
       }),
+    });
+  },
+
+  createGround: async (
+    groundData: GroundType,
+  ): Promise<{ user_id: string; status: string }> => {
+    return apiFetch("/profile/setup", {
+      method: "POST",
+      body: JSON.stringify({
+        user_name: groundData.user_name,
+        ground_name: groundData.ground_name,
+        opening: groundData.opening,
+        closing: groundData.closing,
+        rate: groundData.rate,
+      }),
+    });
+  },
+
+  fetchProfile: async () => {
+    return apiFetch("/profile/me", {
+      method: "GET",
     });
   },
 

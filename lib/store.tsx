@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { AppState, Owner, Booking, Turf } from '../types';
-import { useBookings, useCancelBooking, useSaveBooking, useSaveTurf, useTurfs } from '@/hooks/use-data';
-import { View } from 'lucide-react';
+import { useBookings, useCancelBooking, useSaveBooking, useTurfs } from '@/hooks/use-data';
+
 
 
 interface Toast {
@@ -81,7 +81,7 @@ export const useStore = () => {
   const { data: bookings = [] } = useBookings();
   const saveBookingMutation = useSaveBooking();
   const cancelBookingMutation = useCancelBooking();
-  const saveTurfMutation = useSaveTurf();
+
 
   return {
     state: {
@@ -93,10 +93,6 @@ export const useStore = () => {
     login: (mobile: string) => {
       ui.setTempMobile(mobile);
       ui.showToast(`OTP sent to +91 ${mobile}`, 'info');
-    },
-    verifyOtp: (otp: string) => {
-      ui.setLoggedIn(true);
-      ui.showToast('Login successful', 'success');
     },
     logout: ui.reset,
     setSelectedTurf: ui.setSelectedTurfId,
@@ -128,7 +124,7 @@ export const useStore = () => {
         status: 'active'
       };
       
-      saveTurfMutation.mutate(firstTurf);
+
       ui.setOwner(newOwner);
       ui.setSelectedTurfId(firstTurf.id);
       ui.setCurrentView('DASHBOARD');

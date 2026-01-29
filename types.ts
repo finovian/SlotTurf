@@ -1,31 +1,30 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export enum View {
-  LOGIN = 'LOGIN',
-  OTP = 'OTP',
-  ONBOARDING = 'ONBOARDING',
-  DASHBOARD = 'DASHBOARD',
-  AVAILABILITY = 'AVAILABILITY',
-  ADD_BOOKING = 'ADD_BOOKING',
-  EDIT_BOOKING = 'EDIT_BOOKING',
-  HISTORY = 'HISTORY',
-  CUSTOMERS = 'CUSTOMERS',
-  CUSTOMER_HISTORY = 'CUSTOMER_HISTORY',
-  REVENUE = 'REVENUE',
-  SETTINGS = 'SETTINGS',
-  BOOKING_CONFIRMED = 'BOOKING_CONFIRMED',
-  EDIT_TURF = 'EDIT_TURF',
-  MANAGE_TURFS = 'MANAGE_TURFS',
-  SUBSCRIPTION = 'SUBSCRIPTION',
-  LEGAL = 'LEGAL',
-  SUPPORT = 'SUPPORT',
-  ADMIN = 'ADMIN',
-  EDIT_PROFILE = 'EDIT_PROFILE'
+  LOGIN = "LOGIN",
+  OTP = "OTP",
+  ONBOARDING = "ONBOARDING",
+  DASHBOARD = "DASHBOARD",
+  AVAILABILITY = "AVAILABILITY",
+  ADD_BOOKING = "ADD_BOOKING",
+  EDIT_BOOKING = "EDIT_BOOKING",
+  HISTORY = "HISTORY",
+  CUSTOMERS = "CUSTOMERS",
+  CUSTOMER_HISTORY = "CUSTOMER_HISTORY",
+  REVENUE = "REVENUE",
+  SETTINGS = "SETTINGS",
+  BOOKING_CONFIRMED = "BOOKING_CONFIRMED",
+  EDIT_TURF = "EDIT_TURF",
+  MANAGE_TURFS = "MANAGE_TURFS",
+  SUBSCRIPTION = "SUBSCRIPTION",
+  LEGAL = "LEGAL",
+  SUPPORT = "SUPPORT",
+  ADMIN = "ADMIN",
+  EDIT_PROFILE = "EDIT_PROFILE",
 }
 
 export const OwnerSchema = z.object({
-  name: z.string().min(2, "Name must be at least 2 characters"),
-  businessName: z.string().min(2, "Business name is required"),
+  owner_name: z.string().min(2, "Business name is required"),
   mobile: z.string().length(10, "Mobile must be 10 digits"),
 });
 
@@ -34,16 +33,16 @@ export type Owner = z.infer<typeof OwnerSchema>;
 export const TurfSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Name is required"),
-  type: z.literal('Cricket'),
+  type: z.literal("Cricket"),
   hourlyPrice: z.number().min(0),
   openingTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/),
   closingTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/),
-  status: z.enum(['active', 'disabled']),
+  status: z.enum(["active", "disabled"]),
 });
 
 export type Turf = z.infer<typeof TurfSchema>;
 
-export type BookingStatus = 'active' | 'cancelled';
+export type BookingStatus = "active" | "cancelled";
 
 export const BookingSchema = z.object({
   id: z.string(),
@@ -56,7 +55,7 @@ export const BookingSchema = z.object({
   hours: z.number(),
   totalAmount: z.number(),
   createdAt: z.number(),
-  status: z.enum(['active', 'cancelled']),
+  status: z.enum(["active", "cancelled"]),
 });
 
 export type Booking = z.infer<typeof BookingSchema>;
@@ -69,4 +68,12 @@ export interface AppState {
   tempMobile?: string;
   editingBooking?: Booking | null;
   subscriptionActive: boolean;
+}
+
+export interface GroundType {
+  user_name: string;
+  ground_name: string;
+  opening: string;
+  closing: string;
+  rate: number;
 }

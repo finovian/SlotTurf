@@ -1,5 +1,6 @@
 "use client";
 
+import { useProfile } from "@/hooks/use-data";
 import { useUIStore } from "@/lib/store";
 import { Owner } from "@/types";
 import EditProfileView from "@/views/EditProfileView";
@@ -9,6 +10,8 @@ import { useRouter } from "next/navigation";
 export default function EditProfilePage() {
   const router = useRouter();
   const { owner, setOwner } = useUIStore();
+    const { data, isLoading } = useProfile();
+
 
   const handleUpdate = (updatedOwner: Owner) => {
     setOwner(updatedOwner);
@@ -18,11 +21,11 @@ export default function EditProfilePage() {
     router.back();
   };
 
-  if (!owner) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
   return (
-    <EditProfileView owner={owner} onUpdate={handleUpdate} onBack={handleBack} />
+    <EditProfileView owner={(data as any)?.user as any} onUpdate={handleUpdate} onBack={handleBack} />
   );
 }

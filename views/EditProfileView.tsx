@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Owner } from "../types";
 import { User, Store, Smartphone, Save } from "lucide-react";
 import ConfirmationModal from "@/components/Modal";
-
 
 interface EditProfileViewProps {
   owner: Owner;
@@ -21,9 +20,15 @@ const EditProfileView: React.FC<EditProfileViewProps> = ({
   const [pendingMobile, setPendingMobile] = useState("");
   const [showOtpModal, setShowOtpModal] = useState(false);
 
+  useEffect(() => {
+    if (owner?.owner_name) {
+      setFormData(owner);
+    }
+  }, [owner]);
+
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.mobile !== owner.mobile) {
+    if (formData?.mobile !== owner?.mobile) {
       setPendingMobile(formData.mobile);
       setShowOtpModal(true);
     } else {
@@ -58,29 +63,9 @@ const EditProfileView: React.FC<EditProfileViewProps> = ({
             <input
               required
               className="text-black placeholder:text-[#a1a1a1] w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 outline-none transition-all font-bold"
-              value={formData.name}
+              value={formData?.owner_name}
               onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
-            />
-          </div>
-        </div>
-
-        <div className="space-y-1.5">
-          <label className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest px-1">
-            Business Name
-          </label>
-          <div className="relative">
-            <Store
-              size={18}
-              className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400"
-            />
-            <input
-              required
-              className="text-black placeholder:text-[#a1a1a1] w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 outline-none transition-all font-bold"
-              value={formData.businessName}
-              onChange={(e) =>
-                setFormData({ ...formData, businessName: e.target.value })
+                setFormData({ ...formData, owner_name: e.target.value })
               }
             />
           </div>
@@ -99,7 +84,7 @@ const EditProfileView: React.FC<EditProfileViewProps> = ({
               required
               maxLength={10}
               className="text-black placeholder:text-[#a1a1a1] w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-12 pr-4 focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 outline-none transition-all font-bold tracking-widest"
-              value={formData.mobile}
+              value={formData?.mobile}
               onChange={(e) =>
                 setFormData({
                   ...formData,
@@ -108,7 +93,7 @@ const EditProfileView: React.FC<EditProfileViewProps> = ({
               }
             />
           </div>
-          {formData.mobile !== owner.mobile && (
+          {formData?.mobile !== owner?.mobile && (
             <p className="text-[9px] text-emerald-600 font-bold uppercase tracking-widest px-1 mt-2">
               Mobile update requires OTP verification
             </p>

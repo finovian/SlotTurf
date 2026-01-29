@@ -1,6 +1,6 @@
-import { api } from '@/lib/api';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-
+import { api } from "@/lib/api";
+import { GroundType } from "@/types";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useRequestOTP = () => {
   return useMutation({
@@ -15,16 +15,31 @@ export const useVerifyOTP = () => {
   });
 };
 
+export const useCreateGround = () => {
+  return useMutation({
+    mutationFn: (groundData: GroundType) => api.createGround(groundData),
+  });
+};
+
+
+export const useProfile = () => {
+  return useQuery({
+    queryKey: ["profile"],
+    queryFn: api.fetchProfile,
+  });
+};
+
+
 export const useTurfs = () => {
   return useQuery({
-    queryKey: ['turfs'],
+    queryKey: ["turfs"],
     queryFn: api.fetchTurfs,
   });
 };
 
 export const useBookings = () => {
   return useQuery({
-    queryKey: ['bookings'],
+    queryKey: ["bookings"],
     queryFn: api.fetchBookings,
   });
 };
@@ -34,7 +49,7 @@ export const useSaveBooking = () => {
   return useMutation({
     mutationFn: api.saveBooking,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bookings'] });
+      queryClient.invalidateQueries({ queryKey: ["bookings"] });
     },
   });
 };
@@ -44,7 +59,7 @@ export const useCancelBooking = () => {
   return useMutation({
     mutationFn: api.cancelBooking,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['bookings'] });
+      queryClient.invalidateQueries({ queryKey: ["bookings"] });
     },
   });
 };
@@ -54,7 +69,7 @@ export const useSaveTurf = () => {
   return useMutation({
     mutationFn: api.saveTurf,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['turfs'] });
+      queryClient.invalidateQueries({ queryKey: ["turfs"] });
     },
   });
 };
@@ -64,7 +79,7 @@ export const useDeleteTurf = () => {
   return useMutation({
     mutationFn: api.deleteTurf,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['turfs'] });
+      queryClient.invalidateQueries({ queryKey: ["turfs"] });
     },
   });
 };
