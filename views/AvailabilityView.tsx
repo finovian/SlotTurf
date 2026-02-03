@@ -19,6 +19,7 @@ import TurfSelector from "../components/TurfSelector";
 import { AvailabilitySkeleton } from "../components/Skeleton";
 import DesktopSchedule from "@/components/DesktopSchedule";
 import MobileSchedule from "@/components/MobileSchedule";
+import { toHHMM } from "@/utils/helpers";
 
 interface AvailabilityViewProps {
   turfs: Turf[];
@@ -65,10 +66,13 @@ const AvailabilityView: React.FC<AvailabilityViewProps> = ({
   const dateInputRef = useRef<HTMLInputElement>(null);
 
   const isAll = selectedTurfId === "all";
-  const activeTurf = turfs.find((t) => t.id === selectedTurfId);
+  const activeTurf = turfs?.find((t) => t.id === selectedTurfId);
 
   const timeSlots = activeTurf
-    ? generateTimeSlots(activeTurf.openingTime, activeTurf.closingTime)
+    ? generateTimeSlots(
+        toHHMM(activeTurf?.open_time),
+        toHHMM(activeTurf?.close_time),
+      )
     : [];
 
   /* ---------------- Effects ---------------- */
@@ -157,7 +161,7 @@ const AvailabilityView: React.FC<AvailabilityViewProps> = ({
               <CalendarIcon size={20} />
             </button>
           </div>
-          {turfs.length > 1 && (
+          {turfs?.length > 0 && (
             <TurfSelector
               turfs={turfs}
               selectedTurfId={selectedTurfId}
@@ -186,7 +190,7 @@ const AvailabilityView: React.FC<AvailabilityViewProps> = ({
           </div>
 
           <div className="flex flex-wrap justify-center gap-3 pt-4">
-            {turfs.map((t) => (
+            {turfs?.map((t) => (
               <button
                 key={t.id}
                 onClick={() => onSelectTurf(t.id)}

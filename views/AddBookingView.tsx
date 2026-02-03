@@ -19,7 +19,7 @@ const AddBookingView: React.FC<AddBookingViewProps> = ({ turf, onAdd, onConfirm,
     date: initialData?.date || new Date().toISOString().split('T')[0],
     startTime: initialData?.startTime || '17:00',
     endTime: initialData?.endTime || '18:00',
-    totalAmount: initialData?.totalAmount || turf.hourlyPrice
+    totalAmount: initialData?.totalAmount || turf?.hourly_rate
   });
 
   const [duration, setDuration] = useState(initialData?.hours || 1);
@@ -30,19 +30,19 @@ const AddBookingView: React.FC<AddBookingViewProps> = ({ turf, onAdd, onConfirm,
       const hours = calculateDuration(formData.startTime, formData.endTime);
       if (hours > 0) {
         setDuration(hours);
-        setFormData(prev => ({ ...prev, totalAmount: hours * turf.hourlyPrice }));
+        setFormData(prev => ({ ...prev, totalAmount: hours * turf?.hourly_rate }));
       }
     }
-  }, [formData.startTime, formData.endTime, turf.hourlyPrice, manualPrice]);
+  }, [formData.startTime, formData.endTime, turf.hourly_rate, manualPrice]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     const finalBooking: Booking = {
       id: initialData?.id || `B-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
-      turfId: turf.id,
+      turfId: turf?.id,
       clientName: formData.clientName,
-      mobileNumber: formData.mobileNumber,
+      mobileNumber: (formData.mobileNumber),
       date: formData.date,
       startTime: formData.startTime,
       endTime: formData.endTime,
@@ -53,7 +53,7 @@ const AddBookingView: React.FC<AddBookingViewProps> = ({ turf, onAdd, onConfirm,
     };
 
     onAdd(finalBooking);
-    onConfirm(finalBooking);
+    // onConfirm(finalBooking);
   };
 
   return (
@@ -171,7 +171,7 @@ const AddBookingView: React.FC<AddBookingViewProps> = ({ turf, onAdd, onConfirm,
 
             <div className="flex items-center justify-between px-2 py-2 bg-neutral-50 rounded-xl text-[10px] font-bold text-neutral-400 uppercase tracking-widest">
               <span>Duration: {duration} hrs</span>
-              <span>Rate: {formatCurrency(turf.hourlyPrice)}/hr</span>
+              <span>Rate: {formatCurrency(turf?.hourly_rate)}/hr</span>
             </div>
           </div>
         </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Owner } from "../types";
 import { User, Store, Smartphone, Save } from "lucide-react";
 import ConfirmationModal from "@/components/Modal";
+import { useVerifyNum } from "@/hooks/use-data";
 
 interface EditProfileViewProps {
   owner: Owner;
@@ -20,6 +21,8 @@ const EditProfileView: React.FC<EditProfileViewProps> = ({
   const [pendingMobile, setPendingMobile] = useState("");
   const [showOtpModal, setShowOtpModal] = useState(false);
 
+  const { mutate } = useVerifyNum();
+
   useEffect(() => {
     if (owner?.owner_name) {
       setFormData(owner);
@@ -28,17 +31,30 @@ const EditProfileView: React.FC<EditProfileViewProps> = ({
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
+    onUpdate(formData);
     if (formData?.mobile !== owner?.mobile) {
       setPendingMobile(formData.mobile);
       setShowOtpModal(true);
     } else {
-      onUpdate(formData);
       onBack();
     }
   };
 
   const handleVerifyOtp = () => {
     if (otp.length === 4) {
+      mutate(
+        {
+          otp: otp,
+        },
+        {
+          onSuccess: () => {
+            setOtp("");
+          },
+          onError: (err) => {
+            console.log("err", err);
+          },
+        },
+      );
       onUpdate({ ...formData, mobile: pendingMobile });
       setShowOtpModal(false);
       onBack();

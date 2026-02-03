@@ -21,7 +21,6 @@ export const useCreateGround = () => {
   });
 };
 
-
 export const useProfile = () => {
   return useQuery({
     queryKey: ["profile"],
@@ -29,6 +28,29 @@ export const useProfile = () => {
   });
 };
 
+export const useProfileUpdate = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (profileData: any) => api.profileUpdate(profileData),
+    onSuccess: () => {
+      // 🔁 Refetch profile after successful update
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+    },
+  });
+};
+
+export const useVerifyNum = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (profileData: any) => api.verifyNum(profileData),
+    onSuccess: () => {
+      // 🔁 Refetch profile after successful update
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+    },
+  });
+};
 
 export const useTurfs = () => {
   return useQuery({
@@ -41,6 +63,16 @@ export const useBookings = () => {
   return useQuery({
     queryKey: ["bookings"],
     queryFn: api.fetchBookings,
+  });
+};
+
+export const useCreateBooking = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: api.createBooking,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["bookings"] });
+    },
   });
 };
 
@@ -68,6 +100,16 @@ export const useSaveTurf = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: api.saveTurf,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["turfs"] });
+    },
+  });
+};
+
+export const useAddTurf = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: api.addTuf,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["turfs"] });
     },

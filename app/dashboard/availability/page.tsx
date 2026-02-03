@@ -5,14 +5,12 @@ import { useUIStore } from "@/lib/store";
 import { Booking } from "@/types";
 import AvailabilityView from "@/views/AvailabilityView";
 import { useRouter } from "next/navigation";
-
-
+import { useEffect } from "react";
 
 export default function AvailabilityPage() {
   const router = useRouter();
   const { selectedTurfId, setSelectedTurfId, setEditingBooking } = useUIStore();
-  const { data: turfs = [] } = useTurfs();
-  console.log('turfs', turfs)
+  const { data: turfs } = useTurfs();
   const { data: bookings = [] } = useBookings();
   const cancelBooking = useCancelBooking();
 
@@ -26,10 +24,16 @@ export default function AvailabilityPage() {
     router.push("/dashboard/availability/add-booking");
   };
 
+  useEffect(() => {
+    if (turfs?.ground?.length <= 1) {
+      setSelectedTurfId(turfs.ground?.[0]?.id);
+    }
+  }, [turfs?.ground?.length]);
+
   return (
     <AvailabilityView
-      turfs={turfs}
-      selectedTurfId={selectedTurfId}
+      turfs={turfs?.ground}
+      selectedTurfId={selectedTurfId ?? turfs?.ground?.[0]?.id }
       onSelectTurf={setSelectedTurfId}
       bookings={bookings}
       onSlotClick={handleSlotClick}

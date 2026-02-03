@@ -33,7 +33,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({
   const isAll = selectedTurfId === "all";
   const selectedTurfName = isAll
     ? "All Turfs"
-    : turfs.find((t) => t.id === selectedTurfId)?.name || "Ground";
+    : turfs?.find((t) => t.id === selectedTurfId)?.name || "Ground";
 
   const filteredAndGroupedBookings = useMemo(() => {
     // Filter by name/phone AND date (scoping already handled by props)
@@ -91,7 +91,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({
         <h2 className="text-sm font-bold text-neutral-900 uppercase tracking-widest">
           History
         </h2>
-        {turfs.length > 1 && (
+        {turfs?.length > 1 && (
           <TurfSelector
             turfs={turfs}
             selectedTurfId={selectedTurfId}
@@ -100,7 +100,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({
         )}
       </div>
 
-      {turfs.length > 1 && (
+      {turfs?.length > 1 && (
         <div className="px-2">
           <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-[0.2em]">
             Showing results for:{" "}
@@ -167,7 +167,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({
               </h3>
               <div className="space-y-3">
                 {groupBookings.map((booking) => {
-                  const turf = turfs.find((t) => t.id === booking.turfId);
+                  const turf = turfs?.find((t) => t.id === booking.turfId);
                   return (
                     <div
                       key={booking.id}
@@ -185,7 +185,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({
                           ) : (
                             isAll &&
                             turf &&
-                            turfs.length > 1 && (
+                            turfs?.length > 1 && (
                               <span className="text-[8px] font-bold text-neutral-400 bg-neutral-50 border border-neutral-100 px-1.5 py-0.5 rounded-md uppercase tracking-tighter">
                                 {turf.name}
                               </span>

@@ -33,11 +33,10 @@ export type Owner = z.infer<typeof OwnerSchema>;
 export const TurfSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Name is required"),
-  type: z.literal("Cricket"),
-  hourlyPrice: z.number().min(0),
-  openingTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/),
-  closingTime: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/),
-  status: z.enum(["active", "disabled"]),
+  hourly_rate: z.number().min(0),
+  open_time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/),
+  close_time : z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/),
+  is_active: z.enum(["active", "disabled"]),
 });
 
 export type Turf = z.infer<typeof TurfSchema>;
