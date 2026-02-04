@@ -14,12 +14,12 @@ interface AddBookingViewProps {
 
 const AddBookingView: React.FC<AddBookingViewProps> = ({ turf, onAdd, onConfirm, initialData }) => {
   const [formData, setFormData] = useState({
-    clientName: initialData?.clientName || '',
-    mobileNumber: initialData?.mobileNumber || '',
+    clientName: initialData?.client_name || '',
+    mobileNumber: initialData?.client_mobile || '',
     date: initialData?.date || new Date().toISOString().split('T')[0],
-    startTime: initialData?.startTime || '17:00',
-    endTime: initialData?.endTime || '18:00',
-    totalAmount: initialData?.totalAmount || turf?.hourly_rate
+    startTime: initialData?.start_time || '17:00',
+    endTime: initialData?.end_time || '18:00',
+    totalAmount: initialData?.amount || turf?.hourly_rate
   });
 
   const [duration, setDuration] = useState(initialData?.hours || 1);
@@ -40,16 +40,15 @@ const AddBookingView: React.FC<AddBookingViewProps> = ({ turf, onAdd, onConfirm,
     
     const finalBooking: Booking = {
       id: initialData?.id || `B-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
-      turfId: turf?.id,
-      clientName: formData.clientName,
-      mobileNumber: (formData.mobileNumber),
+      turfID: turf?.id,
+      client_name: formData.clientName,
+      client_mobile: (formData.mobileNumber),
       date: formData.date,
-      startTime: formData.startTime,
-      endTime: formData.endTime,
+      start_time: formData.startTime,
+      end_time: formData.endTime,
       hours: duration,
-      totalAmount: formData.totalAmount,
-      createdAt: initialData?.createdAt || Date.now(),
-      status: initialData?.status || 'active'
+      amount: formData.totalAmount,
+      status: initialData?.status || 'booked'
     };
 
     onAdd(finalBooking);

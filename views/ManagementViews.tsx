@@ -90,7 +90,6 @@ export const EditTurfView: React.FC<{
   const [formData, setFormData] = useState<Turf>(initialData);
 
 
-  console.log("toHHMM(formData?.openingTime)", formData);
 
   return (
     <div className="py-6 space-y-6 animate-in fade-in duration-300">

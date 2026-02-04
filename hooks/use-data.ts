@@ -59,10 +59,16 @@ export const useTurfs = () => {
   });
 };
 
-export const useBookings = () => {
+export const useBookings = (groundId?: string, date?: string) => {
   return useQuery({
-    queryKey: ["bookings"],
-    queryFn: api.fetchBookings,
+    queryKey: ["bookings", groundId, date],
+    queryFn: () =>
+      api.fetchBookings({
+        groundId: groundId!,
+        date: date!,
+      }),
+    enabled: Boolean(groundId && date),
+    staleTime: 10000,
   });
 };
 

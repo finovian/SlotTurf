@@ -1,5 +1,6 @@
 "use client";
 
+import { toHHMM } from "@/utils/helpers";
 import { ChevronRight, Clock } from "lucide-react";
 
 const MobileSchedule = ({
@@ -88,8 +89,6 @@ const MobileSchedule = ({
           const booking = getSlotStatus(time);
           const isSelected = selectedSlots.includes(time);
 
-          console.log("time", booking);
-
           return (
             <div key={time}>
               <div
@@ -112,10 +111,10 @@ const MobileSchedule = ({
                     {booking ? (
                       <>
                         <p className="text-sm font-bold text-neutral-900">
-                          {booking.clientName}
+                          {booking.client_name}
                         </p>
                         <p className="text-[10px] text-neutral-800 uppercase">
-                          Until {booking.endTime}
+                          Until {toHHMM(booking.end_time)}
                         </p>
                       </>
                     ) : (

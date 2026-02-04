@@ -1,18 +1,15 @@
+"use client";
+
 import React, { useState, useRef, useEffect } from "react";
 import {
-  Clock,
-  Edit2,
-  Trash2,
   MapPin,
   Plus,
-  Check,
   ChevronLeft,
   ChevronRight,
   Calendar as CalendarIcon,
-  Book,
 } from "lucide-react";
 
-import { Turf, Booking } from "../types";
+import { Booking } from "../types";
 import { generateTimeSlots } from "../lib/helpers";
 
 import TurfSelector from "../components/TurfSelector";
@@ -20,16 +17,10 @@ import { AvailabilitySkeleton } from "../components/Skeleton";
 import DesktopSchedule from "@/components/DesktopSchedule";
 import MobileSchedule from "@/components/MobileSchedule";
 import { toHHMM } from "@/utils/helpers";
-
-interface AvailabilityViewProps {
-  turfs: Turf[];
-  selectedTurfId: string | null;
-  onSelectTurf: (id: string) => void;
-  bookings: Booking[];
-  onSlotClick: () => void;
-  onEditBooking: (booking: Booking) => void;
-  onCancelBooking: (bookingId: string) => void;
-}
+import dayjs from "dayjs";
+import { useBookings, useCancelBooking, useTurfs } from "@/hooks/use-data";
+import { useRouter } from "next/navigation";
+import { useUIStore } from "@/lib/store";
 
 /* ---------------- Utils ---------------- */
 
@@ -45,15 +36,7 @@ const timeToMinutes = (time: string) => {
 
 /* ---------------- Component ---------------- */
 
-const AvailabilityView: React.FC<AvailabilityViewProps> = ({
-  turfs,
-  selectedTurfId,
-  onSelectTurf,
-  bookings,
-  onSlotClick,
-  onEditBooking,
-  onCancelBooking,
-}) => {
+const AvailabilityView = ({}) => {
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0],
@@ -64,25 +47,46 @@ const AvailabilityView: React.FC<AvailabilityViewProps> = ({
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const dateInputRef = useRef<HTMLInputElement>(null);
+  const date = dayjs(selectedDate).format("YYYY-MM-DD");
+  const router = useRouter();
+
+  const { data: turfs } = useTurfs();
+  const { selectedTurfId, setSelectedTurfId, setEditingBooking } = useUIStore();
+  const cancelBooking = useCancelBooking();
 
   const isAll = selectedTurfId === "all";
-  const activeTurf = turfs?.find((t) => t.id === selectedTurfId);
+  const activeTurf = turfs?.ground?.find((t) => t.id === selectedTurfId);
+
+  const {
+    data: bookings,
+    isLoading,
+    isError,
+  } = useBookings(activeTurf?.id, date);
+
+  const onSlotClick = () => {
+    setEditingBooking(null);
+    router.push("/dashboard/availability/add-booking");
+  };
+
+  const onEditBooking = (booking: Booking) => {
+    setEditingBooking(booking);
+    router.push("/dashboard/availability/add-booking");
+  };
+
+  useEffect(() => {
+    if (turfs?.ground && !isLoading) {
+      if (turfs?.ground?.length <= 1) {
+        setSelectedTurfId(turfs.ground?.[0]?.id);
+      }
+    }
+  }, [turfs?.ground?.length]);
 
   const timeSlots = activeTurf
     ? generateTimeSlots(
-        toHHMM(activeTurf?.open_time),
-        toHHMM(activeTurf?.close_time),
+        toHHMM(bookings?.open_time ?? ""),
+        toHHMM(bookings?.close_time ?? ""),
       )
     : [];
-
-  /* ---------------- Effects ---------------- */
-
-  useEffect(() => {
-    const timer = setTimeout(() => setLoading(false), 500);
-    return () => clearTimeout(timer);
-  }, []);
-
-  /* ---------------- Dates ---------------- */
 
   const nextDates = Array.from({ length: 60 }, (_, i) => {
     const d = new Date();
@@ -90,24 +94,22 @@ const AvailabilityView: React.FC<AvailabilityViewProps> = ({
     return d.toISOString().split("T")[0];
   });
 
-  /* ---------------- Slot Logic ---------------- */
-
   const getSlotStatus = (time: string) => {
     if (isAll) return null;
 
     const slotMinutes = timeToMinutes(time);
 
-    return bookings.find((b) => {
+    return bookings?.bookings?.find((b) => {
       if (
-        b.turfId !== selectedTurfId ||
-        b.date !== selectedDate ||
-        b.status !== "active"
+        b.turfID !== selectedTurfId ||
+        dayjs(b.date).format("YYYY-MM-DD") !== selectedDate ||
+        b.status !== "booked"
       ) {
         return false;
       }
 
-      const start = timeToMinutes(b.startTime);
-      const end = timeToMinutes(b.endTime);
+      const start = timeToMinutes(toHHMM(b.start_time));
+      const end = timeToMinutes(toHHMM(b.end_time));
 
       // End time is exclusive
       return slotMinutes >= start && slotMinutes < end;
@@ -116,11 +118,9 @@ const AvailabilityView: React.FC<AvailabilityViewProps> = ({
 
   const handleCancelClick = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
-    onCancelBooking(id);
+    cancelBooking.mutate(id);
     setActiveActionSlot(null);
   };
-
-  /* ---------------- Scroll ---------------- */
 
   const scroll = (direction: "left" | "right") => {
     if (!scrollRef.current) return;
@@ -132,7 +132,7 @@ const AvailabilityView: React.FC<AvailabilityViewProps> = ({
     });
   };
 
-  if (loading) return <AvailabilitySkeleton />;
+  if (isLoading) return <AvailabilitySkeleton />;
 
   return (
     <div className="py-4 space-y-6 animate-in fade-in duration-500">
@@ -161,11 +161,11 @@ const AvailabilityView: React.FC<AvailabilityViewProps> = ({
               <CalendarIcon size={20} />
             </button>
           </div>
-          {turfs?.length > 0 && (
+          {turfs?.ground && turfs?.ground?.length > 0 && (
             <TurfSelector
-              turfs={turfs}
+              turfs={turfs?.ground}
               selectedTurfId={selectedTurfId}
-              onSelect={onSelectTurf}
+              onSelect={setSelectedTurfId}
               allowAll={false}
             />
           )}
@@ -190,10 +190,10 @@ const AvailabilityView: React.FC<AvailabilityViewProps> = ({
           </div>
 
           <div className="flex flex-wrap justify-center gap-3 pt-4">
-            {turfs?.map((t) => (
+            {turfs?.ground?.map((t) => (
               <button
                 key={t.id}
-                onClick={() => onSelectTurf(t.id)}
+                onClick={() => setSelectedTurfId(t.id)}
                 className="cursor-pointer px-6 h-12 bg-neutral-900 text-white rounded-2xl text-xs font-bold uppercase tracking-widest active:scale-95 transition-all shadow-xl shadow-neutral-900/10"
               >
                 {t.name}

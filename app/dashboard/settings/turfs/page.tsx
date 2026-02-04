@@ -10,7 +10,6 @@ export default function ManageTurfsPage() {
   const router = useRouter();
   const { data: turfs  } = useTurfs();
 
-  console.log('turfs', turfs)
 
   const handleAdd = () => {
     router.push("/dashboard/settings/turfs/new");
@@ -24,5 +23,5 @@ export default function ManageTurfsPage() {
     router.back();
   }
 
-  return <ManageTurfsView turfs={turfs?.ground} onAdd={handleAdd} onEdit={handleEdit} onBack={handleBack} />;
+  return <ManageTurfsView turfs={turfs?.ground ?? []} onAdd={handleAdd} onEdit={handleEdit} onBack={handleBack} />;
 }

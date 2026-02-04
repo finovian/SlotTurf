@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { string, z } from "zod";
 
 export enum View {
   LOGIN = "LOGIN",
@@ -35,9 +35,15 @@ export const TurfSchema = z.object({
   name: z.string().min(1, "Name is required"),
   hourly_rate: z.number().min(0),
   open_time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/),
-  close_time : z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/),
+  close_time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/),
   is_active: z.enum(["active", "disabled"]),
 });
+
+export const TurfSchemaRes = z.object({
+  ground: z.array(TurfSchema),
+});
+
+export type TurfResponse = z.infer<typeof TurfSchemaRes>;
 
 export type Turf = z.infer<typeof TurfSchema>;
 
@@ -45,18 +51,24 @@ export type BookingStatus = "active" | "cancelled";
 
 export const BookingSchema = z.object({
   id: z.string(),
-  turfId: z.string(),
-  clientName: z.string().min(1, "Client name is required"),
-  mobileNumber: z.string().length(10, "Mobile must be 10 digits"),
+  client_name: z.string().min(1, "Client name is required"),
+  client_mobile: z.string().length(10, "Mobile must be 10 digits"),
   date: z.string(),
-  startTime: z.string(),
-  endTime: z.string(),
+  start_time: z.string(),
+  end_time: z.string(),
   hours: z.number(),
-  totalAmount: z.number(),
-  createdAt: z.number(),
-  status: z.enum(["active", "cancelled"]),
+  amount: z.number(),
+  status: z.enum(["booked", "cancelled", "completed"]),
+  turfID : z.string()
 });
 
+export const BookingSchemaRes = z.object({
+  bookings: z.array(BookingSchema),
+  close_time: z.string(),
+  open_time: z.string(),
+});
+
+export type BookingRes = z.infer<typeof BookingSchemaRes>;
 export type Booking = z.infer<typeof BookingSchema>;
 
 export interface AppState {

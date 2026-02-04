@@ -27,9 +27,6 @@ const SettingsView: React.FC<SettingsViewProps> = ({
 }) => {
   const { data } = useProfile();
 
-
-  console.log('data', data)
-
   const bookingsUsed = data?.user?.edges?.bookings?.length ?? 0; // Simulating some activity
   const bookingsTotal = 50;
 

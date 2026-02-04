@@ -1,6 +1,7 @@
 import { toHHMM } from "@/utils/helpers";
-import { Booking, GroundType, Turf } from "../types";
+import { Booking, BookingRes, GroundType, Turf, TurfResponse } from "../types";
 import { apiFetch } from "./apiClient";
+import { promises } from "dns";
 
 const DELAY = 600;
 
@@ -81,7 +82,7 @@ export const api = {
     });
   },
 
-  fetchTurfs: async () => {
+  fetchTurfs: async (): Promise<TurfResponse> => {
     return apiFetch("/ground/fetch", {
       method: "GET",
     });
@@ -112,10 +113,10 @@ export const api = {
     });
   },
 
-  fetchBookings: async (): Promise<Booking[]> => {
-    await new Promise((r) => setTimeout(r, DELAY));
-    return getLocal("bookings", []);
-  },
+  // fetchBookings: async (): Promise<Booking[]> => {
+  //   await new Promise((r) => setTimeout(r, DELAY));
+  //   return getLocal("bookings", []);
+  // },
 
   deleteTurf: async (id: string) => {
     return apiFetch("/ground/delete", {
@@ -131,12 +132,22 @@ export const api = {
       method: "POST",
       body: JSON.stringify({
         date: booking.date,
-        start_time: booking.startTime,
-        end_time: booking.endTime,
-        name: booking.clientName,
-        groundId: booking.turfId,
-        amount: booking.totalAmount,
-        number: Number(booking.mobileNumber),
+        start_time: booking.start_time,
+        end_time: booking.end_time,
+        name: booking.client_name,
+        groundId: booking.turfID,
+        amount: booking.amount,
+        number: Number(booking.client_mobile),
+      }),
+    });
+  },
+
+  fetchBookings: async (payload: { groundId: string; date: string }): Promise<BookingRes> => {
+    return apiFetch("/booking/bookings", {
+      method: "POST",
+      body: JSON.stringify({
+        groundId: payload.groundId,
+        date: payload.date,
       }),
     });
   },

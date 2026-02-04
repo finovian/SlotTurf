@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Check, Clock, Plus } from "lucide-react";
+import { toHHMM } from "@/utils/helpers";
 
 const DesktopSchedule = ({
   selectedDate,
@@ -128,10 +129,10 @@ const DesktopSchedule = ({
                     {booking ? (
                       <>
                         <p className="text-base font-bold text-black truncate">
-                          {booking.clientName}
+                          {booking?.client_name}
                         </p>
                         <p className="text-[10px] font-bold text-neutral-800 uppercase tracking-widest">
-                          {booking.endTime} End
+                          {toHHMM(booking?.end_time)} End
                         </p>
                       </>
                     ) : (
@@ -165,7 +166,7 @@ const DesktopSchedule = ({
                     </button>
 
                     <button
-                      onClick={(e) => handleCancelClick(e, booking.id)}
+                      onClick={(e) => handleCancelClick(e, booking?.id)}
                       className="h-18  cursor-pointer bg-red-900/40 text-red-400 rounded-xl text-xs font-bold uppercase"
                     >
                       Cancel
