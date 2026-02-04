@@ -2,30 +2,37 @@
 
 export const runtime = "edge";
 
-import { useDeleteTurf, useSaveTurf, useTurfs } from "@/hooks/use-data";
+import { useAddTurf, useDeleteTurf, useSaveTurf, useTurfs } from "@/hooks/use-data";
 import { Turf } from "@/types";
 import { EditTurfView } from "@/views/ManagementViews";
 import { useRouter, useParams } from "next/navigation";
+import { useState } from "react";
 
 export default function EditTurfPage() {
   const router = useRouter();
   const params = useParams();
-  const { data: turfs = [] } = useTurfs();
+  const { data: turfs } = useTurfs();
   const saveTurf = useSaveTurf();
   const deleteTurf = useDeleteTurf();
+  const createTurf = useAddTurf()
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const turfId = params.id as string;
   const isNew = turfId === "new";
-  const turf = isNew ? null : turfs.find((t) => t.id === turfId) || null;
+  const turf = isNew ? null : turfs?.ground?.find((t ) => t.id === turfId) || null;
 
   const handleSave = (turf: Turf) => {
+    if(isNew){
+      createTurf.mutate(turf)
+    }
+    
     saveTurf.mutate(turf);
-    router.back();
+    // router.back();
   };
 
   const handleDelete = (id: string) => {
     deleteTurf.mutate(id);
-    router.back();
+    // router.back();
   };
 
   if (!isNew && !turf) {
@@ -35,9 +42,11 @@ export default function EditTurfPage() {
   return (
     <EditTurfView
       turf={turf}
-      turfCount={turfs.length}
+      turfCount={turfs?.ground?.length}
       onSave={handleSave}
       onDelete={handleDelete}
+      showConfirm={showConfirm}
+      setShowConfirm={setShowConfirm}
     />
   );
 }

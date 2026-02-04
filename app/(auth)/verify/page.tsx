@@ -16,10 +16,14 @@ export default function LoginPage() {
     verifyOTP(
       { mobile: tempMobile as "", otp: otpValue },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
           showToast("Login successful", "success");
           setLoggedIn(true);
-          router.replace("/profile-setup");
+          if (data?.isActive) {
+            router.replace("/dashboard");
+          } else {
+            router.replace("/profile-setup");
+          }
         },
         onError: (err) => {
           showToast(err.message || "OTP verification failed", "error");

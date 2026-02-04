@@ -8,7 +8,7 @@ import HistoryView from "@/views/HistoryView";
 
 export default function HistoryPage() {
   const { selectedTurfId, setSelectedTurfId } = useUIStore();
-  const { data: turfs = [] } = useTurfs();
+  const { data: turfs } = useTurfs();
   const { data: bookings = [] } = useBookings();
 
   const isAll = selectedTurfId === 'all';
@@ -17,7 +17,7 @@ export default function HistoryPage() {
   return (
     <HistoryView
       bookings={activeScopedBookings}
-      turfs={turfs}
+      turfs={turfs?.ground}
       selectedTurfId={selectedTurfId}
       onSelectTurf={setSelectedTurfId}
     />

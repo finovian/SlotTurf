@@ -16,6 +16,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
+  if (accessToken && isPublicRoute) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
   // ✅ Logged in → allow everything (no forced redirect)
   return NextResponse.next();
 }

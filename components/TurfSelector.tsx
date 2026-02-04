@@ -12,7 +12,7 @@ interface TurfSelectorProps {
 
 const TurfSelector: React.FC<TurfSelectorProps> = ({ turfs, selectedTurfId, onSelect, allowAll = true }) => {
   const isAllSelected = selectedTurfId === 'all';
-  const selectedTurf = turfs.find(t => t.id === selectedTurfId);
+  const selectedTurf = turfs?.find(t => t.id === selectedTurfId);
   const [isOpen, setIsOpen] = React.useState(false);
 
   if (!selectedTurf && !isAllSelected) return null;
