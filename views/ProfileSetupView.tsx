@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Owner, Turf } from '../types';
+import { Owner } from '../types';
 import { User, Store, MapPin, Clock, IndianRupee } from 'lucide-react';
 
 interface OnboardingData extends Owner {
@@ -27,8 +27,7 @@ const ProfileSetupView: React.FC<ProfileSetupViewProps> = ({ onComplete, mobile 
     e.preventDefault();
     if (identity && formData.groundName) {
       onComplete({
-        name: identity, // Mapping the single field to both for data consistency
-        businessName: identity,
+        owner_name: identity, // Mapping the single field to both for data consistency
         mobile: mobile,
         ...formData
       });

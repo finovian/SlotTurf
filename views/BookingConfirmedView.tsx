@@ -12,17 +12,17 @@ interface BookingConfirmedViewProps {
 
 const BookingConfirmedView: React.FC<BookingConfirmedViewProps> = ({ booking, onDone }) => {
   const shareOnWhatsApp = () => {
-    const text = `Hello ${booking.clientName},
+    const text = `Hello ${booking.client_name},
 Your booking is confirmed.
 
 📅 Date: ${booking.date}
-⏰ Time: ${booking.startTime} – ${booking.endTime}
-💰 Amount: ₹${booking.totalAmount}
+⏰ Time: ${booking.start_time} – ${booking.end_time}
+💰 Amount: ₹${booking.amount}
 
 Thank you.`;
     
     const encodedText = encodeURIComponent(text);
-    const whatsappUrl = `https://wa.me/${booking.mobileNumber}?text=${encodedText}`;
+    const whatsappUrl = `https://wa.me/${booking.client_mobile}?text=${encodedText}`;
     window.open(whatsappUrl, '_blank');
   };
 
@@ -36,7 +36,7 @@ Thank you.`;
         </div>
         <h1 className="text-2xl font-bold text-neutral-900">Booking Confirmed!</h1>
         <p className="text-neutral-500 max-w-xs mx-auto">
-          The booking for <span className="text-neutral-900 font-semibold">{booking.clientName}</span> has been saved to your schedule.
+          The booking for <span className="text-neutral-900 font-semibold">{booking.client_name}</span> has been saved to your schedule.
         </p>
       </div>
 
@@ -64,7 +64,7 @@ Thank you.`;
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-neutral-500">Amount</span>
-          <span className="text-neutral-900 font-bold">{formatCurrency(booking.totalAmount)}</span>
+          <span className="text-neutral-900 font-bold">{formatCurrency(booking.amount)}</span>
         </div>
       </div>
     </div>

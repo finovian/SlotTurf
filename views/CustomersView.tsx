@@ -30,19 +30,19 @@ const CustomersView: React.FC<CustomersViewProps> = ({ bookings, onCustomerSelec
     }>();
 
     bookings.forEach(b => {
-      const existing = map.get(b.mobileNumber);
+      const existing = map.get(b.client_mobile);
       if (existing) {
         existing.total += 1;
         if (b.status === 'cancelled') existing.cancelledCount += 1;
         else existing.activeCount += 1;
         if (new Date(b.date) > new Date(existing.lastDate)) existing.lastDate = b.date;
       } else {
-        map.set(b.mobileNumber, {
-          name: b.clientName,
-          mobile: b.mobileNumber,
+        map.set(b.client_mobile, {
+          name: b.client_name,
+          mobile: b.client_mobile,
           total: 1,
           cancelledCount: b.status === 'cancelled' ? 1 : 0,
-          activeCount: b.status === 'active' ? 1 : 0,
+          activeCount: b.status === 'booked' ? 1 : 0,
           lastDate: b.date
         });
       }

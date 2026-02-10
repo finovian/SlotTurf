@@ -127,11 +127,11 @@ export default function Layout({
             </p>
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 bg-white border border-neutral-200 rounded-lg flex items-center justify-center text-neutral-900 font-bold text-xs">
-                {state.turfs[0]?.name.charAt(0) || "T"}
+                {/* {state.turfs[0]?.name.charAt(0) || "T"} */}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-bold text-neutral-900 truncate">
-                  {state.turfs[0]?.name || "Loading..."}
+                  {/* {state.turfs[0]?.name || "Loading..."} */}
                 </p>
                 <p className="text-[9px] text-neutral-400 font-medium">
                   Free Tier

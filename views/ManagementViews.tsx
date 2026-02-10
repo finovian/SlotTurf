@@ -76,7 +76,7 @@ export const EditTurfView: React.FC<{
   onSave: (t: Turf) => void;
   onDelete: (id: string) => void;
   showConfirm : boolean;
-  setShowConfirm : () => void
+  setShowConfirm : (data : boolean) => void
 }> = ({ turf, turfCount, onSave, onDelete,showConfirm , setShowConfirm }) => {
   const initialData: Turf = turf || {
     id: Math.random().toString(36).substr(2, 9).toUpperCase(),
@@ -225,7 +225,7 @@ export const EditTurfView: React.FC<{
                 Confirm Removal
               </button>
               <button
-                onClick={() => setShowConfirm(false)}
+                onClick={() => setShowConfirm(true)}
                 className="cursor-pointer w-full h-14 bg-neutral-100 text-neutral-600 font-bold rounded-2xl"
               >
                 Cancel

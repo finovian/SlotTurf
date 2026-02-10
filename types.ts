@@ -1,4 +1,4 @@
-import { string, z } from "zod";
+import { any, string, z } from "zod";
 
 export enum View {
   LOGIN = "LOGIN",
@@ -39,11 +39,29 @@ export const TurfSchema = z.object({
   is_active: z.enum(["active", "disabled"]),
 });
 
+export const userSchema = z.object({
+
+  
+
+  // id: z.string(),
+  // name: z.string().min(1, "Name is required"),
+  // hourly_rate: z.number().min(0),
+  // open_time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/),
+  // close_time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/),
+  // is_active: z.enum(["active", "disabled"]),
+});
+
 export const TurfSchemaRes = z.object({
   ground: z.array(TurfSchema),
 });
 
+export const ProfileResponse = z.object({
+  // user: z.array(userSchema),
+});
+
 export type TurfResponse = z.infer<typeof TurfSchemaRes>;
+
+export type ProfileResponse = z.infer<typeof ProfileResponse>
 
 export type Turf = z.infer<typeof TurfSchema>;
 

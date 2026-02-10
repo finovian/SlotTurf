@@ -1,7 +1,8 @@
 "use client";
 
+import { SLOT_UI, SlotState } from "@/const/SlotsUI";
 import { toHHMM } from "@/utils/helpers";
-import { ChevronRight, Clock } from "lucide-react";
+import { Clock } from "lucide-react";
 
 const MobileSchedule = ({
   selectedDate,
@@ -9,7 +10,6 @@ const MobileSchedule = ({
   getSlotStatus,
   activeActionSlot,
   setActiveActionSlot,
-  onSlotClick,
   onEditBooking,
   handleCancelClick,
   setSelectedSlots,
@@ -87,6 +87,19 @@ const MobileSchedule = ({
       <div className="bg-white rounded-4xl border border-neutral-100 shadow-sm divide-y">
         {timeSlots.map((time: any, i: number) => {
           const booking = getSlotStatus(time);
+          const slotState = booking?.status ?? "available";
+          function isSlotState(value: string): value is SlotState {
+            return value in SLOT_UI;
+          }
+
+          let ui;
+
+          if (isSlotState(slotState)) {
+            ui = SLOT_UI[slotState];
+          } else {
+            ui = SLOT_UI.available; // fallback
+          }
+
           const isSelected = selectedSlots.includes(time);
 
           return (
@@ -96,14 +109,16 @@ const MobileSchedule = ({
                     ${
                       isSelected
                         ? "bg-[#0099662b] text-black border-emerald-600 shadow-xl"
-                        : booking
-                          ? `bg-gray-300 border-neutral-100 opacity-60  `
-                          : "bg-emerald-50/10 border-emerald-100/30 hover:bg-emerald-50/30 hover:border-emerald-200"
+                        : ui.card
+                      // ? `bg-gray-300 border-neutral-100 opacity-60  `
+                      // : "bg-emerald-50/10 border-emerald-100/30 hover:bg-emerald-50/30 hover:border-emerald-200"
                     }`}
-                onClick={() => handleSlotSelect(time)}
+                onClick={() => ui.clickable && handleSlotSelect(time)}
               >
                 <div className="flex items-center gap-6">
-                  <div className="w-14 text-sm font-bold text-neutral-400">
+                  <div
+                    className={`w-14 text-sm font-bold ${booking ? "text-black" : "text-neutral-400"}`}
+                  >
                     {time}
                   </div>
 
@@ -114,19 +129,26 @@ const MobileSchedule = ({
                           {booking.client_name}
                         </p>
                         <p className="text-[10px] text-neutral-800 uppercase">
-                          Until {toHHMM(booking.end_time)}
+                          {toHHMM(booking?.end_time)} End
                         </p>
                       </>
                     ) : (
                       <p className="text-sm font-semibold text-emerald-600">
-                        Tap to book
+                        Available
                       </p>
                     )}
                   </div>
+                  {/* <div
+                      className={`w-8 h-8 rounded-xl flex items-center justify-center ${ui.iconWrap}`}
+                    >
+                      {ui.icon === "check" && <Check size={16} />}
+                      {ui.icon === "plus" && <Plus size={16} />}
+                      {ui.icon === "x" && <X size={16} />}
+                    </div> */}
                 </div>
               </div>
 
-              {booking && booking && activeActionSlot == time && (
+              {booking?.status === "booked" && activeActionSlot === time && (
                 <div className="flex gap-2 bg-neutral-900 p-2">
                   <button
                     onClick={(e) => {

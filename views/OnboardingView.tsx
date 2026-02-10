@@ -11,11 +11,10 @@ const OnboardingView: React.FC<OnboardingViewProps> = ({ onComplete }) => {
   const [formData, setFormData] = useState<Turf>({
     id: 'initial',
     name: '',
-    type: 'Cricket',
-    hourlyPrice: 1500,
-    openingTime: '06:00',
-    closingTime: '23:00',
-    status: 'active'
+    hourly_rate: 1500,
+    open_time: '06:00',
+    close_time: '23:00',
+    is_active: 'active'
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -56,8 +55,8 @@ const OnboardingView: React.FC<OnboardingViewProps> = ({ onComplete }) => {
                 type="number"
                 className="w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl px-4 focus:bg-white focus:ring-2 focus:ring-emerald-500/10 focus:border-emerald-600 outline-none transition-all font-bold"
                 placeholder="1500"
-                value={formData.hourlyPrice}
-                onChange={e => setFormData({...formData, hourlyPrice: Number(e.target.value)})}
+                value={formData.hourly_rate}
+                onChange={e => setFormData({...formData, hourly_rate: Number(e.target.value)})}
               />
             </div>
 
@@ -68,8 +67,8 @@ const OnboardingView: React.FC<OnboardingViewProps> = ({ onComplete }) => {
                   required
                   type="time"
                   className="w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl px-4 font-bold"
-                  value={formData.openingTime}
-                  onChange={e => setFormData({...formData, openingTime: e.target.value})}
+                  value={formData.open_time}
+                  onChange={e => setFormData({...formData, open_time: e.target.value})}
                 />
               </div>
               <div className="space-y-1.5">
@@ -78,8 +77,8 @@ const OnboardingView: React.FC<OnboardingViewProps> = ({ onComplete }) => {
                   required
                   type="time"
                   className="w-full h-14 bg-neutral-50 border border-neutral-200 rounded-2xl px-4 font-bold"
-                  value={formData.closingTime}
-                  onChange={e => setFormData({...formData, closingTime: e.target.value})}
+                  value={formData.close_time}
+                  onChange={e => setFormData({...formData, close_time: e.target.value})}
                 />
               </div>
             </div>

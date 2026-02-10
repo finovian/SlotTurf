@@ -388,7 +388,6 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { Booking, Turf } from '../types';
-import { formatCurrency } from '../lib/helpers';
 import { Calendar, Users, Clock, MoreVertical, Edit2, Trash2, CheckCircle2, ChevronRight, LayoutGrid, Phone } from 'lucide-react';
 import { CardSkeleton } from '../components/Skeleton';
 import TurfSelector from '../components/TurfSelector';
@@ -397,10 +396,10 @@ import ConfirmationModal from '../components/Modal';
 interface DashboardViewProps {
   turfs: Turf[];
   selectedTurfId: string | null;
-  onSelectTurf: (id: string) => void;
+  onSelectTurf?: (id: string) => void;
   bookings: Booking[];
-  onEditBooking: (booking: Booking) => void;
-  onCancelBooking: (id: string) => void;
+  onEditBooking?: (booking: Booking) => void;
+  onCancelBooking?: (id: string) => void;
 }
 
 const DashboardView: React.FC<DashboardViewProps> = ({ 
@@ -424,12 +423,12 @@ const DashboardView: React.FC<DashboardViewProps> = ({
   const today = new Date().toISOString().split('T')[0];
   
   const filteredBookings = useMemo(() => 
-    bookings.filter(b => b.status === 'active' && (isAll || b.turfId === selectedTurfId)),
+    bookings.filter(b => b.status === 'booked' && (isAll || b.turfID === selectedTurfId)),
     [bookings, isAll, selectedTurfId]
   );
 
   const todayBookings = useMemo(() => 
-    filteredBookings.filter(b => b.date === today).sort((a, b) => a.startTime.localeCompare(b.startTime)),
+    filteredBookings.filter(b => b.date === today).sort((a, b) => a.start_time.localeCompare(b.start_time)),
     [filteredBookings, today]
   );
 
@@ -453,7 +452,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({
           <h2 className="text-2xl font-bold text-neutral-900 tracking-tight">Daily Pulse</h2>
           <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-widest">{selectedTurfName}</p>
         </div>
-        <TurfSelector turfs={turfs} selectedTurfId={selectedTurfId} onSelect={onSelectTurf} />
+        {/* <TurfSelector turfs={turfs} selectedTurfId={selectedTurfId} onSelect={onSelectTurf} /> */}
       </div>
 
       {/* Operational Highlights - Claymorphism Grid */}
@@ -502,7 +501,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({
             todayBookings.map(b => (
               <div 
                 key={b.id} 
-                className={`bg-white p-5 rounded-[32px] flex items-center justify-between transition-all active:scale-[0.97] cursor-pointer ${clayShadow}`}
+                className={`bg-white p-5 rounded-4xl flex items-center justify-between transition-all active:scale-[0.97] cursor-pointer ${clayShadow}`}
                 onClick={() => setActiveActionBooking(b)}
               >
                 <div className="flex items-center gap-5 min-w-0">
@@ -510,8 +509,8 @@ const DashboardView: React.FC<DashboardViewProps> = ({
                     <Clock size={20} />
                   </div>
                   <div className="min-w-0">
-                    <h4 className="font-bold text-neutral-900 text-sm tracking-tight truncate">{b.clientName}</h4>
-                    <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-tight">{b.startTime} – {b.endTime}</p>
+                    <h4 className="font-bold text-neutral-900 text-sm tracking-tight truncate">{b.client_name}</h4>
+                    <p className="text-[10px] text-neutral-400 font-bold uppercase tracking-tight">{b.start_time} – {b.end_time}</p>
                   </div>
                 </div>
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center text-neutral-300">
@@ -540,8 +539,8 @@ const DashboardView: React.FC<DashboardViewProps> = ({
                     <p className="text-xl font-bold text-neutral-900 mt-1">{new Date(b.date).getDate()}</p>
                   </div>
                   <div className="min-w-0">
-                    <h4 className="font-bold text-neutral-800 text-xs tracking-tight truncate">{b.clientName}</h4>
-                    <p className="text-[10px] text-neutral-400 font-bold uppercase">{b.startTime} Slot</p>
+                    <h4 className="font-bold text-neutral-800 text-xs tracking-tight truncate">{b.client_name}</h4>
+                    <p className="text-[10px] text-neutral-400 font-bold uppercase">{b.start_time} Slot</p>
                   </div>
                 </div>
                 <button onClick={() => setActiveActionBooking(b)} className="text-neutral-300 p-2">
@@ -567,15 +566,15 @@ const DashboardView: React.FC<DashboardViewProps> = ({
                 <div className={`w-20 h-20 bg-neutral-50 text-neutral-900 rounded-[32px] flex items-center justify-center mx-auto mb-4 ${clayShadow}`}>
                   <Calendar size={32} />
                 </div>
-                <h4 className="text-2xl font-bold text-neutral-900 tracking-tight">{activeActionBooking.clientName}</h4>
+                <h4 className="text-2xl font-bold text-neutral-900 tracking-tight">{activeActionBooking.client_name}</h4>
                 <p className="text-[11px] font-black text-neutral-400 uppercase tracking-widest flex items-center justify-center gap-2">
-                  <Phone size={12} className="text-emerald-500" /> +91 {activeActionBooking.mobileNumber}
+                  <Phone size={12} className="text-emerald-500" /> +91 {activeActionBooking.client_mobile}
                 </p>
               </div>
 
               <div className="grid grid-cols-1 gap-4">
                 <button 
-                  onClick={() => { onEditBooking(activeActionBooking); setActiveActionBooking(null); }}
+                  // onClick={() => { onEditBooking(activeActionBooking); setActiveActionBooking(null); }}
                   className={`w-full h-16 bg-neutral-900 text-white font-bold rounded-[24px] flex items-center justify-center gap-3 active:scale-95 transition-all ${darkClayShadow}`}
                 >
                   <Edit2 size={18} /> Edit Session
@@ -603,7 +602,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({
         isOpen={showCancelConfirm}
         onClose={() => setShowCancelConfirm(false)}
         onConfirm={() => {
-          if (activeActionBooking) onCancelBooking(activeActionBooking.id);
+          // if (activeActionBooking) onCancelBooking(activeActionBooking.id);
           setShowCancelConfirm(false);
           setActiveActionBooking(null);
         }}

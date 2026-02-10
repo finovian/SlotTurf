@@ -103,21 +103,24 @@ const AvailabilityView = ({}) => {
       if (
         b.turfID !== selectedTurfId ||
         dayjs(b.date).format("YYYY-MM-DD") !== selectedDate ||
-        b.status !== "booked"
+        !["booked", "completed",].includes(b.status)
       ) {
         return false;
       }
 
-      const start = timeToMinutes(toHHMM(b.start_time));
-      const end = timeToMinutes(toHHMM(b.end_time));
+      const start = timeToMinutes(
+        dayjs.utc(b.start_time).local().format("HH:mm"),
+      );
 
-      // End time is exclusive
+      const end = timeToMinutes(dayjs.utc(b.end_time).local().format("HH:mm"));
+
       return slotMinutes >= start && slotMinutes < end;
     });
   };
 
   const handleCancelClick = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
+    console.log('id', id)
     cancelBooking.mutate(id);
     setActiveActionSlot(null);
   };

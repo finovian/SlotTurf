@@ -39,14 +39,18 @@ const HistoryView: React.FC<HistoryViewProps> = ({
     // Filter by name/phone AND date (scoping already handled by props)
     const filtered = bookings.filter((b) => {
       const matchesSearch =
-        b.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        b.mobileNumber.includes(searchTerm);
+        b.client_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        b.client_mobile.includes(searchTerm);
       const matchesDate = selectedDate ? b.date === selectedDate : true;
       return matchesSearch && matchesDate;
     });
 
     // Sort by created time descending
-    const sorted = [...filtered].sort((a, b) => b.createdAt - a.createdAt);
+    const sorted = [...filtered].sort((a, b) => {
+      const t1 = new Date(`1970-01-01T${a.start_time}:00`);
+      const t2 = new Date(`1970-01-01T${b.start_time}:00`);
+      return t2.getTime() - t1.getTime();
+    });
 
     // Group by date
     const groups: { [key: string]: Booking[] } = {};
@@ -167,7 +171,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({
               </h3>
               <div className="space-y-3">
                 {groupBookings.map((booking) => {
-                  const turf = turfs?.find((t) => t.id === booking.turfId);
+                  const turf = turfs?.find((t) => t.id === booking.turfID);
                   return (
                     <div
                       key={booking.id}
@@ -176,7 +180,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <h4 className="font-bold text-neutral-800 tracking-tight text-sm">
-                            {booking.clientName}
+                            {booking.client_name}
                           </h4>
                           {booking.status === "cancelled" ? (
                             <span className="bg-red-50 text-red-500 px-1.5 py-0.5 rounded-lg text-[8px] font-bold uppercase tracking-wider">
@@ -194,17 +198,17 @@ const HistoryView: React.FC<HistoryViewProps> = ({
                         </div>
                         <div className="flex items-center gap-2 text-[10px] text-neutral-400 font-bold uppercase tracking-tight">
                           <span className="text-neutral-500">
-                            {booking.startTime} – {booking.endTime}
+                            {booking.start_time} – {booking.end_time}
                           </span>
                           <span className="w-1 h-1 bg-neutral-200 rounded-full" />
-                          <span>{booking.mobileNumber}</span>
+                          <span>{booking.client_mobile}</span>
                         </div>
                       </div>
                       <div className="text-right">
                         <p
                           className={`font-bold tracking-tight text-sm ${booking.status === "cancelled" ? "text-neutral-400 line-through" : "text-emerald-700"}`}
                         >
-                          {formatCurrency(booking.totalAmount)}
+                          {formatCurrency(booking.amount)}
                         </p>
                         <p className="text-[9px] font-bold text-neutral-300 uppercase tracking-tighter">
                           REF: {booking.id}

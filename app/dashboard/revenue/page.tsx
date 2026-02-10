@@ -8,16 +8,16 @@ import RevenueView from "@/views/RevenueView";
 
 export default function RevenuePage() {
   const { selectedTurfId, setSelectedTurfId } = useUIStore();
-  const { data: turfs = [] } = useTurfs();
-  const { data: bookings = [] } = useBookings();
+  const { data: turfs  } = useTurfs();
+  const { data: bookings  } = useBookings();
 
   const isAll = selectedTurfId === 'all';
-  const activeScopedBookings = bookings.filter(b => isAll ? true : b.turfId === selectedTurfId);
+  const activeScopedBookings = bookings?.bookings?.filter(b => isAll ? true : b.turfID === selectedTurfId);
 
   return (
     <RevenueView
-      bookings={activeScopedBookings}
-      turfs={turfs}
+      bookings={activeScopedBookings ?? []}
+      turfs={turfs?.ground ?? []}
       selectedTurfId={selectedTurfId}
       onSelectTurf={setSelectedTurfId}
     />
