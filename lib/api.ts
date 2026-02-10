@@ -28,7 +28,7 @@ export const api = {
   verifyOTP: async (
     mobile: string,
     otp: string,
-  ): Promise<{ isActive: string; status: string }> => {
+  ): Promise<{ isActive: string; status: string, token : string }> => {
     return apiFetch("/auth/verify", {
       method: "POST",
       body: JSON.stringify({
