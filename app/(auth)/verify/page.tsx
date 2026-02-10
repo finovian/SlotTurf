@@ -6,7 +6,6 @@ import { useVerifyOTP } from "@/hooks/use-data";
 import VerifyView from "@/views/verifyView";
 import Cookies from "js-cookie";
 
-
 export default function LoginPage() {
   const router = useRouter();
 
@@ -19,10 +18,15 @@ export default function LoginPage() {
       { mobile: tempMobile as "", otp: otpValue },
       {
         onSuccess: (data) => {
+          console.log('data', data)
           showToast("Login successful", "success");
           setLoggedIn(true);
-          Cookies.set("access_token", data?.token ?? "");
-          
+          Cookies.set("access_token", data?.token, {
+            expires: 15, 
+            secure: true,
+            sameSite: "lax",
+          });
+
           if (data?.isActive) {
             router.replace("/dashboard");
           } else {
