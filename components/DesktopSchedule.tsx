@@ -1,8 +1,8 @@
 "use client";
 
-import React from "react";
-import { Check, Clock, Plus } from "lucide-react";
+import { Check, Clock, Plus, X } from "lucide-react";
 import { toHHMM } from "@/utils/helpers";
+import { SLOT_UI, SlotState } from "@/const/SlotsUI";
 
 const DesktopSchedule = ({
   selectedDate,
@@ -10,7 +10,6 @@ const DesktopSchedule = ({
   getSlotStatus,
   activeActionSlot,
   setActiveActionSlot,
-
   onEditBooking,
   handleCancelClick,
   setSelectedSlots,
@@ -29,9 +28,9 @@ const DesktopSchedule = ({
   const handleSlotSelect = (time: string) => {
     const isBooked = getSlotStatus(time);
     if (isBooked) {
-      setActiveActionSlot(time)
-      return
-    };
+      setActiveActionSlot(time);
+      return;
+    }
 
     // Toggle off
     if (selectedSlots.includes(time)) {
@@ -86,21 +85,30 @@ const DesktopSchedule = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {timeSlots.map((time: any, i: any) => {
             const booking = getSlotStatus(time);
+            const slotState = booking?.status ?? "available";
+            function isSlotState(value: string): value is SlotState {
+              return value in SLOT_UI;
+            }
+
+            let ui;
+
+            if (isSlotState(slotState)) {
+              ui = SLOT_UI[slotState];
+            } else {
+              ui = SLOT_UI.available; // fallback
+            }
+            console.log("object", booking);
             const isSelected = selectedSlots.includes(time);
 
             return (
               <div key={time} className="relative h-full ">
                 {/* Slot Card */}
                 <div
-                  className={`h-full flex flex-col justify-between p-6 rounded-4xl border border-emerald-300 transition-all duration-300 cursor-pointer
-                  ${
-                    isSelected
-                      ? "bg-[#0099662b] text-black border-emerald-600 shadow-xl"
-                      : booking
-                        ? "bg-gray-200 border-neutral-100 shadow-sm opacity-60 "
-                        : "bg-emerald-50/10 border-emerald-100/30 hover:bg-emerald-50/30 hover:border-emerald-200"
-                  }`}
-                  onClick={() => handleSlotSelect(time)}
+                  className={`h-full flex flex-col justify-between p-6 rounded-4xl border transition-all duration-300
+          ${isSelected ? "bg-[#0099662b] border-emerald-600 shadow-xl" : ui.card}
+          ${ui.clickable ? "cursor-pointer" : "cursor-not-allowed"}
+        `}
+                  onClick={() => ui.clickable && handleSlotSelect(time)}
                 >
                   {/* Time + Icon */}
                   <div className="flex justify-between items-start mb-6">
@@ -109,18 +117,11 @@ const DesktopSchedule = ({
                     </div>
 
                     <div
-                      className={`w-8 h-8 rounded-xl flex items-center justify-center
-                      ${
-                        booking
-                          ? "bg-[#bdbdbd55] text-neutral-600"
-                          : "bg-emerald-100/50 text-emerald-600"
-                      }`}
+                      className={`w-8 h-8 rounded-xl flex items-center justify-center ${ui.iconWrap}`}
                     >
-                      {booking ? (
-                        <Check stroke="black" size={16} />
-                      ) : (
-                        <Plus size={16} />
-                      )}
+                      {ui.icon === "check" && <Check size={16} />}
+                      {ui.icon === "plus" && <Plus size={16} />}
+                      {ui.icon === "x" && <X size={16} />}
                     </div>
                   </div>
 
@@ -148,8 +149,8 @@ const DesktopSchedule = ({
                   </div>
                 </div>
 
-                {/* Actions Overlay */}
-                {booking && activeActionSlot == time && (
+                {/* Actions Overlay (only for BOOKED) */}
+                {booking?.status === "booked" && activeActionSlot === time && (
                   <div className="absolute inset-0 bg-neutral-900 rounded-4xl p-4 flex flex-col justify-center gap-2 z-10">
                     <p className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest text-center mb-2">
                       Actions

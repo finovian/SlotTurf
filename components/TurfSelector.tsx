@@ -12,7 +12,7 @@ interface TurfSelectorProps {
 
 const TurfSelector: React.FC<TurfSelectorProps> = ({ turfs, selectedTurfId, onSelect, allowAll = true }) => {
   const isAllSelected = selectedTurfId === 'all';
-  const selectedTurf = turfs?.find(t => t.id === selectedTurfId);
+  const selectedTurf =Array.isArray(turfs) && turfs?.find(t => t.id === selectedTurfId);
   const [isOpen, setIsOpen] = React.useState(false);
 
   if (!selectedTurf && !isAllSelected) return null;
@@ -24,10 +24,10 @@ const TurfSelector: React.FC<TurfSelectorProps> = ({ turfs, selectedTurfId, onSe
         className="cursor-pointer flex items-center gap-2 px-3 py-1.5 bg-white border border-neutral-100 rounded-full shadow-sm active:scale-95 transition-all focus:outline-none"
       >
         <div className="w-5 h-5 bg-neutral-900 rounded-full flex items-center justify-center text-[10px] text-white font-bold">
-          {isAllSelected ? <LayoutGrid size={10} /> : selectedTurf?.name.charAt(0)}
+          {isAllSelected ? <LayoutGrid size={10} /> : selectedTurf?.valueOf?.name}
         </div>
         <span className="text-[11px] font-bold text-neutral-800 uppercase tracking-tight truncate max-w-30">
-          {isAllSelected ? 'All Turfs' : selectedTurf?.name}
+          {isAllSelected ? 'All Turfs' : selectedTurf?.valueOf?.name}
         </span>
         <ChevronDown size={14} className={`text-neutral-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>

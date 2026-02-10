@@ -5,11 +5,10 @@ export const runtime = "edge";
 import { useAddTurf, useDeleteTurf, useSaveTurf, useTurfs } from "@/hooks/use-data";
 import { Turf } from "@/types";
 import { EditTurfView } from "@/views/ManagementViews";
-import { useRouter, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 
 export default function EditTurfPage() {
-  const router = useRouter();
   const params = useParams();
   const { data: turfs } = useTurfs();
   const saveTurf = useSaveTurf();
@@ -42,7 +41,7 @@ export default function EditTurfPage() {
   return (
     <EditTurfView
       turf={turf}
-      turfCount={turfs?.ground?.length}
+      turfCount={turfs?.ground?.length ?? 0}
       onSave={handleSave}
       onDelete={handleDelete}
       showConfirm={showConfirm}

@@ -82,7 +82,8 @@ export default function Layout({ children, currentView, onNavigate }: LayoutProp
         
         <div className="flex items-center gap-4">
           <div className="w-8 h-8 bg-neutral-900 rounded-lg flex items-center justify-center text-white font-bold text-xs shadow-lg shadow-neutral-900/10">
-            {turfs[0]?.name.charAt(0) || 'T'}
+            {/* {turfs[0]?.name.charAt(0) || 'T'} */}
+            T
           </div>
         </div>
       </header>

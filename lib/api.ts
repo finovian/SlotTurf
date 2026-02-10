@@ -53,7 +53,7 @@ export const api = {
     });
   },
 
-  fetchProfile: async () => {
+  fetchProfile: async ():Promise<any> => {
     return apiFetch("/profile/me", {
       method: "GET",
     });
@@ -142,7 +142,10 @@ export const api = {
     });
   },
 
-  fetchBookings: async (payload: { groundId: string; date: string }): Promise<BookingRes> => {
+  fetchBookings: async (payload: {
+    groundId: string;
+    date: string;
+  }): Promise<BookingRes> => {
     return apiFetch("/booking/bookings", {
       method: "POST",
       body: JSON.stringify({
@@ -165,11 +168,11 @@ export const api = {
   },
 
   cancelBooking: async (id: string): Promise<void> => {
-    await new Promise((r) => setTimeout(r, DELAY));
-    const bookings = getLocal<Booking[]>("bookings", []);
-    setLocal(
-      "bookings",
-      bookings.map((b) => (b.id === id ? { ...b, status: "cancelled" } : b)),
-    );
+    return apiFetch("/booking/delete", {
+      method: "POST",
+      body: JSON.stringify({
+        bookingId: id,
+      }),
+    });
   },
 };

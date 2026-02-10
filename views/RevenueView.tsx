@@ -53,8 +53,8 @@ const RevenueView: React.FC<RevenueViewProps> = ({
   const filteredBookings = useMemo(() => {
     return bookings.filter(
       (b) =>
-        b.status === "active" &&
-        (selectedTurfId === "all" || b.turfId === selectedTurfId) &&
+        b.status === "booked" &&
+        (selectedTurfId === "all" || b.turfID === selectedTurfId) &&
         isDateInRange(b.date, start, end),
     );
   }, [bookings, start, end, selectedTurfId]);
@@ -69,7 +69,7 @@ const RevenueView: React.FC<RevenueViewProps> = ({
     filteredBookings.forEach((b) => {
       const entry = map.get(b.date) || { date: b.date, count: 0, revenue: 0 };
       entry.count += 1;
-      entry.revenue += b.totalAmount;
+      entry.revenue += b.amount;
       map.set(b.date, entry);
     });
 
@@ -202,7 +202,7 @@ const RevenueView: React.FC<RevenueViewProps> = ({
             Financial Hub
           </h2>
           <TurfSelector
-            turfs={turfs}
+            turfs={turfs ?? []}
             selectedTurfId={selectedTurfId}
             onSelect={onSelectTurf}
           />

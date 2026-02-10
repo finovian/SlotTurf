@@ -15,7 +15,7 @@ export default function CustomersPage() {
 
   return (
     <CustomersView
-      bookings={bookings?.bookings}
+      bookings={bookings?.bookings ?? []}
       onCustomerSelect={handleCustomerSelect}
     />
   );

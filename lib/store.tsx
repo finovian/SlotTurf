@@ -110,18 +110,17 @@ export const useStore = () => {
     },
     setOnboarding: (data: any) => {
       const newOwner = { 
-        name: data.name, 
+        owner_name: data.name, 
         businessName: data.businessName, 
         mobile: data.mobile 
       };
       const firstTurf: Turf = {
         id: `T-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
         name: data.groundName || 'Ground A',
-        type: 'Cricket',
-        hourlyPrice: data.hourlyPrice || 1500,
-        openingTime: data.openingTime || '06:00',
-        closingTime: data.closingTime || '23:00',
-        status: 'active'
+        hourly_rate: data.hourlyPrice || 1500,
+        open_time: data.openingTime || '06:00',
+        close_time: data.closingTime || '23:00',
+        is_active : 'active'
       };
       
 
