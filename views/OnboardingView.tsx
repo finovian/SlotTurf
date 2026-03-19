@@ -4,11 +4,11 @@ import { Turf } from '../types';
 import { CheckCircle2 } from 'lucide-react';
 
 interface OnboardingViewProps {
-  onComplete: (turf: Turf) => void;
+  onComplete: (turf: any) => void;
 }
 
 const OnboardingView: React.FC<OnboardingViewProps> = ({ onComplete }) => {
-  const [formData, setFormData] = useState<Turf>({
+  const [formData, setFormData] = useState({
     id: 'initial',
     name: '',
     hourly_rate: 1500,

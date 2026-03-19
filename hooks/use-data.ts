@@ -85,7 +85,7 @@ export const useCreateBooking = () => {
 export const useSaveBooking = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: api.saveBooking,
+    mutationFn: api.updateBooking,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["bookings"] });
     },
@@ -129,5 +129,38 @@ export const useDeleteTurf = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["turfs"] });
     },
+  });
+};
+
+
+export const useDashboard = () => {
+  return useQuery({
+    queryKey: ["dashboard"],
+    queryFn: api.fetchDashboard,
+    staleTime: 30000, 
+  });
+};
+
+export const useHistory = (params: { ground_id?: string; search?: string; from?: string; to?: string }) => {
+  return useQuery({
+    queryKey: ["history", params],
+    queryFn: () => api.fetchHistory(params),
+    staleTime: 60000,
+  });
+};
+
+export const useRevenue = (params: { ground_id?: string; from?: string; to?: string }) => {
+  return useQuery({
+    queryKey: ["revenue", params],
+    queryFn: () => api.fetchRevenue(params),
+    staleTime: 60000,
+  });
+};
+
+export const useSubscription = () => {
+  return useQuery({
+    queryKey: ["subscription"],
+    queryFn: api.fetchSubscription,
+    staleTime: 60000,
   });
 };

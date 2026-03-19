@@ -10,13 +10,12 @@ import {
 } from "lucide-react";
 
 import { Booking } from "../types";
-import { generateTimeSlots } from "../lib/helpers";
+import { generateTimeSlots, minutesToHHMM } from "../lib/helpers";
 
 import TurfSelector from "../components/TurfSelector";
 import { AvailabilitySkeleton } from "../components/Skeleton";
 import DesktopSchedule from "@/components/DesktopSchedule";
 import MobileSchedule from "@/components/MobileSchedule";
-import { toHHMM } from "@/utils/helpers";
 import dayjs from "dayjs";
 import { useBookings, useCancelBooking, useTurfs } from "@/hooks/use-data";
 import { useRouter } from "next/navigation";
@@ -54,7 +53,11 @@ const AvailabilityView = ({}) => {
   const { selectedTurfId, setSelectedTurfId, setEditingBooking } = useUIStore();
   const cancelBooking = useCancelBooking();
 
-  const isAll = selectedTurfId === "all";
+  useEffect(() => {
+    if (turfs?.ground && !isLoading && !selectedTurfId) {
+      setSelectedTurfId(turfs?.ground?.[0]?.id);
+    }
+  }, [turfs?.ground?.length]);
   const activeTurf = turfs?.ground?.find((t) => t.id === selectedTurfId);
 
   const {
@@ -62,6 +65,17 @@ const AvailabilityView = ({}) => {
     isLoading,
     isError,
   } = useBookings(activeTurf?.id, date);
+
+  const timeSlots = activeTurf
+    ? generateTimeSlots(
+        minutesToHHMM(bookings?.open_time_minutes ?? 0),
+        minutesToHHMM(bookings?.close_time_minutes ?? 0),
+      )
+    : [];
+
+    console.log('timeSlots', minutesToHHMM(bookings?.open_time_minutes ?? 0), minutesToHHMM(bookings?.close_time_minutes ?? 0))
+
+  const isAll = selectedTurfId === "all";
 
   const onSlotClick = () => {
     setEditingBooking(null);
@@ -72,21 +86,6 @@ const AvailabilityView = ({}) => {
     setEditingBooking(booking);
     router.push("/dashboard/availability/add-booking");
   };
-
-  useEffect(() => {
-    if (turfs?.ground && !isLoading) {
-      if (turfs?.ground?.length <= 1) {
-        setSelectedTurfId(turfs.ground?.[0]?.id);
-      }
-    }
-  }, [turfs?.ground?.length]);
-
-  const timeSlots = activeTurf
-    ? generateTimeSlots(
-        toHHMM(bookings?.open_time ?? ""),
-        toHHMM(bookings?.close_time ?? ""),
-      )
-    : [];
 
   const nextDates = Array.from({ length: 60 }, (_, i) => {
     const d = new Date();
@@ -103,7 +102,7 @@ const AvailabilityView = ({}) => {
       if (
         b.turfID !== selectedTurfId ||
         dayjs(b.date).format("YYYY-MM-DD") !== selectedDate ||
-        !["booked", "completed",].includes(b.status)
+        !["booked", "completed"].includes(b.status)
       ) {
         return false;
       }
@@ -120,7 +119,7 @@ const AvailabilityView = ({}) => {
 
   const handleCancelClick = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
-    console.log('id', id)
+    console.log("id", id);
     cancelBooking.mutate(id);
     setActiveActionSlot(null);
   };

@@ -5,6 +5,10 @@ import { formatCurrency } from "../lib/helpers";
 import { Search, Calendar as CalendarIcon, X } from "lucide-react";
 import { ListSkeleton } from "../components/Skeleton";
 import TurfSelector from "../components/TurfSelector";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
 
 interface HistoryViewProps {
   bookings: Booking[];
@@ -41,7 +45,9 @@ const HistoryView: React.FC<HistoryViewProps> = ({
       const matchesSearch =
         b.client_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         b.client_mobile.includes(searchTerm);
-      const matchesDate = selectedDate ? b.date === selectedDate : true;
+      const matchesDate = selectedDate
+        ? dayjs.utc(b.date).format("YYYY-MM-DD") === selectedDate
+        : true;
       return matchesSearch && matchesDate;
     });
 
@@ -55,7 +61,7 @@ const HistoryView: React.FC<HistoryViewProps> = ({
     // Group by date
     const groups: { [key: string]: Booking[] } = {};
     sorted.forEach((booking) => {
-      const dateKey = booking.date;
+      const dateKey = dayjs.utc(booking.date).format("YYYY-MM-DD");
       if (!groups[dateKey]) groups[dateKey] = [];
       groups[dateKey].push(booking);
     });
@@ -142,12 +148,6 @@ const HistoryView: React.FC<HistoryViewProps> = ({
               onChange={(e) => setSelectedDate(e.target.value)}
               value={selectedDate}
             />
-            {/* <button
-              onClick={() => dateInputRef.current?.showPicker()}
-              className="cursor-pointer w-10 h-10 bg-white border border-neutral-200 rounded-xl flex items-center justify-center text-neutral-400 hover:text-neutral-900 shadow-sm transition-all active:scale-95"
-            >
-
-            </button> */}
           </label>
 
           {selectedDate && (
@@ -198,7 +198,8 @@ const HistoryView: React.FC<HistoryViewProps> = ({
                         </div>
                         <div className="flex items-center gap-2 text-[10px] text-neutral-400 font-bold uppercase tracking-tight">
                           <span className="text-neutral-500">
-                            {booking.start_time} – {booking.end_time}
+                            {/* {booking.start_time} – {booking.end_time} */}
+                            {dayjs.utc(booking.start_time).local().format("h:mm A")} – {dayjs.utc(booking.end_time).local().format("h:mm A")}
                           </span>
                           <span className="w-1 h-1 bg-neutral-200 rounded-full" />
                           <span>{booking.client_mobile}</span>

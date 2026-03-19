@@ -1,19 +1,5 @@
-import { toHHMM } from "@/utils/helpers";
-import { Booking, BookingRes, GroundType, Turf, TurfResponse } from "../types";
+import { Booking, BookingRes, GroundType, TurfResponse, HistoryRes, RevenueRes, DashboardRes } from "../types";
 import { apiFetch } from "./apiClient";
-import { promises } from "dns";
-
-const DELAY = 600;
-
-// LocalStorage Persistence for Mocks
-const getLocal = <T>(key: string, def: T): T => {
-  const val = localStorage.getItem(`turfflow_api_${key}`);
-  return val ? JSON.parse(val) : def;
-};
-
-const setLocal = <T>(key: string, val: T): void => {
-  localStorage.setItem(`turfflow_api_${key}`, JSON.stringify(val));
-};
 
 export const api = {
   requestOTP: async (mobile: string): Promise<{ success: boolean }> => {
@@ -28,12 +14,13 @@ export const api = {
   verifyOTP: async (
     mobile: string,
     otp: string,
-  ): Promise<{ isActive: string; status: string, token : string }> => {
+  ): Promise<{ isActive: string; status: string; token: string }> => {
     return apiFetch("/auth/verify", {
       method: "POST",
       body: JSON.stringify({
         identifier: mobile,
         otp,
+        name: `user#${mobile}`,
       }),
     });
   },
@@ -53,7 +40,7 @@ export const api = {
     });
   },
 
-  fetchProfile: async ():Promise<any> => {
+  fetchProfile: async (): Promise<any> => {
     return apiFetch("/profile/me", {
       method: "GET",
     });
@@ -88,41 +75,38 @@ export const api = {
     });
   },
 
-  saveTurf: async (turf: Turf) => {
+  saveTurf: async (turf: any) => {
+    console.log("turfapi", turf);
     return apiFetch("/ground/update", {
       method: "POST",
       body: JSON.stringify({
         ground_name: turf.name,
-        opening: toHHMM(turf.open_time),
-        closing: toHHMM(turf.close_time),
-        rate: turf.hourly_rate,
+        opening: turf.opening,
+        closing: turf.closing,
+        rate: turf.rate,
         groundId: turf.id,
       }),
     });
   },
 
-  addTuf: async (turf: Turf) => {
+  addTuf: async (turf: any) => {
     return apiFetch("/ground/create", {
       method: "POST",
       body: JSON.stringify({
         ground_name: turf.name,
-        opening: toHHMM(turf.open_time),
-        closing: toHHMM(turf.close_time),
-        rate: turf.hourly_rate,
+        opening: turf.opening,
+        closing: turf.closing,
+        rate: turf.rate,
       }),
     });
   },
 
-  // fetchBookings: async (): Promise<Booking[]> => {
-  //   await new Promise((r) => setTimeout(r, DELAY));
-  //   return getLocal("bookings", []);
-  // },
-
   deleteTurf: async (id: string) => {
+    console.log("id", id);
     return apiFetch("/ground/delete", {
       method: "POST",
       body: JSON.stringify({
-        GroundId: id,
+        groundId: id,
       }),
     });
   },
@@ -137,7 +121,7 @@ export const api = {
         name: booking.client_name,
         groundId: booking.turfID,
         amount: booking.amount,
-        number: Number(booking.client_mobile),
+        mobile: booking.client_mobile,
       }),
     });
   },
@@ -155,16 +139,20 @@ export const api = {
     });
   },
 
-  saveBooking: async (booking: Booking): Promise<Booking> => {
-    await new Promise((r) => setTimeout(r, DELAY));
-    const bookings = getLocal<Booking[]>("bookings", []);
-    const exists = bookings.findIndex((b) => b.id === booking.id);
-    const updated =
-      exists >= 0
-        ? bookings.map((b) => (b.id === booking.id ? booking : b))
-        : [booking, ...bookings];
-    setLocal("bookings", updated);
-    return booking;
+  updateBooking: async (booking: Booking) => {
+    return apiFetch("/booking/update-bookings", {
+      method: "POST",
+      body: JSON.stringify({
+        bookingId: booking.id,
+        date: booking.date,
+        start_time: booking.start_time,
+        end_time: booking.end_time,
+        name: booking.client_name,
+        groundId: booking.turfID,
+        amount: booking.amount,
+        mobile: booking.client_mobile,
+      }),
+    });
   },
 
   cancelBooking: async (id: string): Promise<void> => {
@@ -174,5 +162,39 @@ export const api = {
         bookingId: id,
       }),
     });
+  },
+
+  fetchDashboard: async (): Promise<DashboardRes> => {
+    return apiFetch("/dashboard", { method: "GET" });
+  },
+
+  fetchHistory: async (params: {
+    ground_id?: string;
+    search?: string;
+    from?: string;
+    to?: string;
+  }): Promise<HistoryRes> => {
+    const q = new URLSearchParams();
+    if (params.ground_id) q.set("ground_id", params.ground_id);
+    if (params.search) q.set("search", params.search);
+    if (params.from) q.set("from", params.from);
+    if (params.to) q.set("to", params.to);
+    return apiFetch(`/history?${q.toString()}`, { method: "GET" });
+  },
+
+  fetchRevenue: async (params: {
+    ground_id?: string;
+    from?: string;
+    to?: string;
+  }): Promise<RevenueRes> => {
+    const q = new URLSearchParams();
+    if (params.ground_id) q.set("ground_id", params.ground_id);
+    if (params.from) q.set("from", params.from);
+    if (params.to) q.set("to", params.to);
+    return apiFetch(`/revenue/summary?${q.toString()}`, { method: "GET" });
+  },
+
+  fetchSubscription: async () => {
+    return apiFetch("/profile/subscription", { method: "GET" });
   },
 };

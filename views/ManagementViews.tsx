@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Turf, View } from "../types";
-import { formatCurrency } from "../lib/helpers";
+import { formatCurrency, minutesToHHMM } from "../lib/helpers";
 import {
   Check,
   ShieldCheck,
@@ -54,7 +54,8 @@ export const ManageTurfsView: React.FC<{
                 <div>
                   <h4 className="font-bold text-neutral-900">{turf.name}</h4>
                   <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">
-                    {toHHMM(turf.open_time)} - {toHHMM(turf.close_time)} •{" "}
+                    {minutesToHHMM(turf.open_time_minutes)} -{" "}
+                    {minutesToHHMM(turf.close_time_minutes)} •{" "}
                     {formatCurrency(turf.hourly_rate)}/hr
                   </p>
                 </div>
@@ -73,22 +74,29 @@ export const ManageTurfsView: React.FC<{
 export const EditTurfView: React.FC<{
   turf: Turf | null;
   turfCount: number;
-  onSave: (t: Turf) => void;
+  onSave: (data: any) => void;
   onDelete: (id: string) => void;
-  showConfirm : boolean;
-  setShowConfirm : (data : boolean) => void
-}> = ({ turf, turfCount, onSave, onDelete,showConfirm , setShowConfirm }) => {
-  const initialData: Turf = turf || {
-    id: Math.random().toString(36).substr(2, 9).toUpperCase(),
-    name: "",
-    hourly_rate: 1500,
-    open_time: "06:00",
-    close_time: "23:00",
-    is_active: "active",
+  showConfirm: boolean;
+  setShowConfirm: (data: boolean) => void;
+}> = ({ turf, turfCount, onSave, onDelete, showConfirm, setShowConfirm }) => {
+  const isNew = !turf;
+
+  const [formData, setFormData] = useState({
+    name: turf?.name ?? "",
+    hourly_rate: turf?.hourly_rate ?? 1500,
+    opening: turf ? minutesToHHMM(turf.open_time_minutes) : "06:00",
+    closing: turf ? minutesToHHMM(turf.close_time_minutes) : "23:00",
+  });
+
+  const handleSave = () => {
+    onSave({
+      ...(!isNew ? { id: turf.id } : {}),
+      name: formData.name,
+      opening: formData.opening,
+      closing: formData.closing,
+      rate: formData.hourly_rate,
+    });
   };
-
-  const [formData, setFormData] = useState<Turf>(initialData);
-
 
 
   return (
@@ -149,11 +157,11 @@ export const EditTurfView: React.FC<{
                 <input
                   type="time"
                   className="w-full h-14 text-black placeholder:text-[#a1a1a1] bg-neutral-50 border border-neutral-200 rounded-2xl pl-10 pr-2 font-bold"
-                  value={toHHMM(formData?.open_time)}
+                  value={toHHMM(formData?.opening)}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      open_time: toHHMM(e.target.value),
+                      opening: toHHMM(e.target.value),
                     })
                   }
                 />
@@ -171,11 +179,11 @@ export const EditTurfView: React.FC<{
                 <input
                   type="time"
                   className="w-full text-black placeholder:text-[#a1a1a1] h-14 bg-neutral-50 border border-neutral-200 rounded-2xl pl-10 pr-2 font-bold"
-                  value={toHHMM(formData?.close_time)}
+                  value={toHHMM(formData?.closing)}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      close_time: toHHMM(e.target.value),
+                      closing: toHHMM(e.target.value),
                     })
                   }
                 />
@@ -185,7 +193,7 @@ export const EditTurfView: React.FC<{
         </div>
 
         <button
-          onClick={() => onSave(formData)}
+          onClick={() => handleSave()}
           className="w-full cursor-pointer h-16 bg-neutral-900 text-white font-bold rounded-2xl shadow-xl shadow-neutral-900/10 active:scale-[0.98] transition-all text-lg"
         >
           {turf ? "Update Ground" : "Add Ground"}
@@ -219,13 +227,13 @@ export const EditTurfView: React.FC<{
             </div>
             <div className="space-y-3">
               <button
-                onClick={() => onDelete(formData.id)}
+                onClick={() => onDelete(!isNew ? turf?.id : "")}
                 className="cursor-pointer w-full h-14 bg-red-600 text-white font-bold rounded-2xl active:scale-95 transition-transform"
               >
                 Confirm Removal
               </button>
               <button
-                onClick={() => setShowConfirm(true)}
+                onClick={() => setShowConfirm(false)}
                 className="cursor-pointer w-full h-14 bg-neutral-100 text-neutral-600 font-bold rounded-2xl"
               >
                 Cancel
