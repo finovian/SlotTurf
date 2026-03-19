@@ -3,6 +3,7 @@ import { Ubuntu } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import Toast from "@/components/Toast";
+import { PWAInstallBanner } from "@/components/PWAInstallBanner";
 
 const ubuntu = Ubuntu({
   subsets: ["latin"],
@@ -13,6 +14,12 @@ const ubuntu = Ubuntu({
 export const metadata: Metadata = {
   title: "Turf Flow",
   description: "Manage your turf bookings with ease.",
+  manifest: "/manifest.json",
+  themeColor: "#000000",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+  },
 };
 
 export default function RootLayout({
@@ -25,6 +32,7 @@ export default function RootLayout({
       <body className={`${ubuntu.variable} antialiased`}>
         <Providers>{children}</Providers>
         <Toast />
+        <PWAInstallBanner />
       </body>
     </html>
   );
