@@ -21,6 +21,7 @@ export default function EditTurfPage() {
   const turf = isNew ? null : turfs?.ground?.find((t ) => t.id === turfId) || null;
 
   const handleSave = (turf: Turf) => {
+    console.log('turf20', turf)
     if(isNew){
       createTurf.mutate(turf)
     }
@@ -30,6 +31,7 @@ export default function EditTurfPage() {
   };
 
   const handleDelete = (id: string) => {
+    console.log('idddd', id)
     deleteTurf.mutate(id);
     // router.back();
   };

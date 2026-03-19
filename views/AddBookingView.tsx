@@ -4,6 +4,10 @@ import { Turf, Booking } from '../types';
 // Fix: Use lib/helpers instead of deprecated utils/helpers
 import { calculateDuration, formatCurrency } from '../lib/helpers';
 import { User, Phone, Calendar as CalendarIcon, Clock, Save, IndianRupee } from 'lucide-react';
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
 
 interface AddBookingViewProps {
   turf: Turf;
@@ -14,13 +18,21 @@ interface AddBookingViewProps {
 
 const AddBookingView: React.FC<AddBookingViewProps> = ({ turf, onAdd, onConfirm, initialData }) => {
   const [formData, setFormData] = useState({
-    clientName: initialData?.client_name || '',
-    mobileNumber: initialData?.client_mobile || '',
-    date: initialData?.date || new Date().toISOString().split('T')[0],
-    startTime: initialData?.start_time || '17:00',
-    endTime: initialData?.end_time || '18:00',
-    totalAmount: initialData?.amount || turf?.hourly_rate
-  });
+  clientName: initialData?.client_name || '',
+  mobileNumber: initialData?.client_mobile || '',
+  date: initialData?.date 
+    ? dayjs(initialData.date).format('YYYY-MM-DD') 
+    : new Date().toISOString().split('T')[0],
+  startTime: initialData?.start_time 
+    ? dayjs.utc(initialData.start_time).local().format('HH:mm') 
+    : '17:00',
+  endTime: initialData?.end_time 
+    ? dayjs.utc(initialData.end_time).local().format('HH:mm') 
+    : '18:00',
+  totalAmount: initialData?.amount || turf?.hourly_rate
+});
+
+  console.log('initialData', initialData)
 
   const [duration, setDuration] = useState(initialData?.hours || 1);
   const [manualPrice, setManualPrice] = useState(!!initialData);

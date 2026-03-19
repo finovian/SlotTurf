@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { AppState, Owner, Booking, Turf } from '../types';
 import { useBookings, useCancelBooking, useSaveBooking, useTurfs } from '@/hooks/use-data';
+import { HHMMToMinutes } from './helpers';
 
 
 
@@ -118,8 +119,8 @@ export const useStore = () => {
         id: `T-${Math.random().toString(36).substr(2, 9).toUpperCase()}`,
         name: data.groundName || 'Ground A',
         hourly_rate: data.hourlyPrice || 1500,
-        open_time: data.openingTime || '06:00',
-        close_time: data.closingTime || '23:00',
+        open_time_minutes: HHMMToMinutes(data.openingTime || '06:00'),
+        close_time_minutes: HHMMToMinutes(data.closingTime || '23:00'),
         is_active : 'active'
       };
       

@@ -23,7 +23,8 @@ export default function ProfileSetupPage() {
   }, [data?.ground?.length, isLoading]);
 
   const handleOnboarding = (data: any) => {
-    const { businessName, groundName, openingTime, closingTime, hourlyPrice } =
+    console.log('data', data)
+    const { owner_name, groundName, openingTime, closingTime, hourlyPrice } =
       data;
 
     mutate(
@@ -32,7 +33,7 @@ export default function ProfileSetupPage() {
         ground_name: groundName,
         opening: openingTime,
         rate: hourlyPrice,
-        user_name: businessName,
+        user_name: owner_name,
       },
       {
         onSuccess: () => {

@@ -26,53 +26,43 @@ const SettingsView: React.FC<SettingsViewProps> = ({
   onDeleteAccount,
 }) => {
   const { data } = useProfile();
+  console.log("useProfile", data?.user?.edges?.subscription?.used_bookings);
 
-  const bookingsUsed = data?.user?.edges?.bookings?.length ?? 0; // Simulating some activity
+  const bookingsUsed = data?.user?.edges?.subscription?.used_bookings ?? 0; // Simulating some activity
   const bookingsTotal = 50;
 
-
   const bookingsProgress = (bookingsUsed / bookingsTotal) * 100;
-
 
   const now = dayjs();
 
   const startDate = data?.user?.edges?.subscription?.start_date
-  ? dayjs( data?.user?.edges?.subscription?.start_date)
-  : null;
+    ? dayjs(data?.user?.edges?.subscription?.start_date)
+    : null;
 
-const endDate = data?.user?.edges?.subscription?.end_date
-  ? dayjs( data?.user?.edges?.subscription?.end_date)
-  : null;
+  const endDate = data?.user?.edges?.subscription?.end_date
+    ? dayjs(data?.user?.edges?.subscription?.end_date)
+    : null;
 
-// Total days
-const daysTotal =
-  startDate && endDate
-    ? Math.max(endDate.diff(startDate, "day"), 1)
+  // Total days
+  const daysTotal =
+    startDate && endDate ? Math.max(endDate.diff(startDate, "day"), 1) : 0;
+
+  // Used days
+  const daysUsed = startDate
+    ? Math.min(daysTotal, Math.max(now.diff(startDate, "day"), 0))
     : 0;
 
-// Used days
-const daysUsed =
-  startDate
-    ? Math.min(
-        daysTotal,
-        Math.max(now.diff(startDate, "day"), 0)
-      )
-    : 0;
-
-// Progress %
-const daysProgress =
-  daysTotal > 0
-    ? Math.min(100, Math.round((daysUsed / daysTotal) * 100))
-    : 0;
+  // Progress %
+  const daysProgress =
+    daysTotal > 0 ? Math.min(100, Math.round((daysUsed / daysTotal) * 100)) : 0;
 
   //   const endsInText =
   // endDate && now.isBefore(endDate)
   //   ? `Ends in ${endDate.from(now, true)}`
   //   : "Trial ended";
 
-
-    const startLabel = startDate?.format("DD MMM YYYY");
-const endLabel = endDate?.format("DD MMM YYYY");
+  const startLabel = startDate?.format("DD MMM YYYY");
+  const endLabel = endDate?.format("DD MMM YYYY");
 
   const clayShadow =
     "shadow-[10px_10px_20px_rgba(0,0,0,0.05),inset_-6px_-6px_12px_rgba(0,0,0,0.05),inset_6px_6px_12px_rgba(255,255,255,0.8)]";
@@ -157,93 +147,87 @@ const endLabel = endDate?.format("DD MMM YYYY");
 
       {/* Free Trial Progress Card */}
 
+      <div className="space-y-4">
+        <h3 className="text-[11px] font-black text-neutral-400 uppercase tracking-[0.2em] px-2 text-left">
+          Trial Status
+        </h3>
 
- <div className="space-y-4">
-  <h3 className="text-[11px] font-black text-neutral-400 uppercase tracking-[0.2em] px-2 text-left">
-    Trial Status
-  </h3>
+        <div className={`bg-white rounded-[48px] p-8 space-y-8 ${clayShadow}`}>
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-[20px] flex items-center justify-center">
+                <Zap size={20} fill="currentColor" />
+              </div>
+              <div>
+                <h4 className="text-sm font-bold text-neutral-900">
+                  Premium Trial
+                </h4>
+                <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">
+                  Two-factor Limit
+                </p>
+              </div>
+            </div>
 
-  <div className={`bg-white rounded-[48px] p-8 space-y-8 ${clayShadow}`}>
-    {/* Header */}
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-[20px] flex items-center justify-center">
-          <Zap size={20} fill="currentColor" />
-        </div>
-        <div>
-          <h4 className="text-sm font-bold text-neutral-900">
-            Premium Trial
-          </h4>
-          <p className="text-[9px] font-black text-emerald-600 uppercase tracking-widest">
-            Two-factor Limit
+            <span className="text-[10px] font-black text-neutral-300 bg-neutral-50 px-3 py-1.5 rounded-full uppercase tracking-widest">
+              {startLabel}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 gap-6">
+            {/* Bookings */}
+            <div className="space-y-3">
+              <div className="flex justify-between items-end px-1">
+                <div className="flex items-center gap-2">
+                  <Users size={14} className="text-neutral-400" />
+                  <span className="text-[10px] font-black text-neutral-500 uppercase tracking-widest">
+                    Volume
+                  </span>
+                </div>
+                <span className="text-[11px] font-bold text-neutral-900">
+                  {bookingsUsed} / {bookingsTotal} Bookings
+                </span>
+              </div>
+
+              <div className="h-3 w-full bg-neutral-50 rounded-full overflow-hidden shadow-inner p-[1px]">
+                <div
+                  className="h-full bg-neutral-900 rounded-full transition-all duration-1000"
+                  style={{ width: `${bookingsProgress}%` }}
+                />
+              </div>
+            </div>
+
+            {/* Days */}
+            <div className="space-y-3">
+              <div className="flex justify-between items-end px-1">
+                <div className="flex items-center gap-2">
+                  <Clock size={14} className="text-neutral-400" />
+                  <span className="text-[10px] font-black text-neutral-500 uppercase tracking-widest">
+                    Duration
+                  </span>
+                </div>
+                <span className="text-[11px] font-bold text-neutral-900">
+                  {daysUsed} / {daysTotal} Days
+                </span>
+              </div>
+
+              <div className="h-3 w-full bg-neutral-50 rounded-full overflow-hidden shadow-inner p-px">
+                <div
+                  className="h-full bg-emerald-500 rounded-full transition-all duration-1000"
+                  style={{ width: `${daysProgress}%` }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <p className="text-[9px] text-neutral-400 font-bold uppercase tracking-widest text-center pt-2 leading-relaxed">
+            Trial ends when you hit{" "}
+            <span className="text-neutral-900">{bookingsTotal} bookings</span>
+            <br /> or <span className="text-neutral-900">{daysTotal} days</span>
+            , whichever comes first.
           </p>
         </div>
       </div>
-
-      <span className="text-[10px] font-black text-neutral-300 bg-neutral-50 px-3 py-1.5 rounded-full uppercase tracking-widest">
-        {startLabel}
-      </span>
-    </div>
-
-    <div className="grid grid-cols-1 gap-6">
-      {/* Bookings */}
-      <div className="space-y-3">
-        <div className="flex justify-between items-end px-1">
-          <div className="flex items-center gap-2">
-            <Users size={14} className="text-neutral-400" />
-            <span className="text-[10px] font-black text-neutral-500 uppercase tracking-widest">
-              Volume
-            </span>
-          </div>
-          <span className="text-[11px] font-bold text-neutral-900">
-            {bookingsUsed} / {bookingsTotal} Bookings
-          </span>
-        </div>
-
-        <div className="h-3 w-full bg-neutral-50 rounded-full overflow-hidden shadow-inner p-[1px]">
-          <div
-            className="h-full bg-neutral-900 rounded-full transition-all duration-1000"
-            style={{ width: `${bookingsProgress}%` }}
-          />
-        </div>
-      </div>
-
-      {/* Days */}
-      <div className="space-y-3">
-        <div className="flex justify-between items-end px-1">
-          <div className="flex items-center gap-2">
-            <Clock size={14} className="text-neutral-400" />
-            <span className="text-[10px] font-black text-neutral-500 uppercase tracking-widest">
-              Duration
-            </span>
-          </div>
-          <span className="text-[11px] font-bold text-neutral-900">
-            {daysUsed} / {daysTotal} Days
-          </span>
-        </div>
-
-        <div className="h-3 w-full bg-neutral-50 rounded-full overflow-hidden shadow-inner p-px">
-          <div
-            className="h-full bg-emerald-500 rounded-full transition-all duration-1000"
-            style={{ width: `${daysProgress}%` }}
-          />
-        </div>
-      </div>
-    </div>
-
-    <p className="text-[9px] text-neutral-400 font-bold uppercase tracking-widest text-center pt-2 leading-relaxed">
-      Trial ends when you hit{" "}
-      <span className="text-neutral-900">
-        {bookingsTotal} bookings
-      </span>
-      <br /> or{" "}
-      <span className="text-neutral-900">
-        {daysTotal} days
-      </span>
-      , whichever comes first.
-    </p>
-  </div>
-</div>
 
       {/* Settings Menu */}
       <div className={`space-y-8 pb-8`}>

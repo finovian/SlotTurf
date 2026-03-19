@@ -34,14 +34,13 @@ export const TurfSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Name is required"),
   hourly_rate: z.number().min(0),
-  open_time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/),
-  close_time: z.string().regex(/^([01]\d|2[0-3]):([0-5]\d)$/),
+  open_time_minutes: z.number(),
+  close_time_minutes: z.number(),
   is_active: z.enum(["active", "disabled"]),
 });
 
-export const userSchema = z.object({
 
-  
+export const userSchema = z.object({
 
   // id: z.string(),
   // name: z.string().min(1, "Name is required"),
@@ -82,12 +81,31 @@ export const BookingSchema = z.object({
 
 export const BookingSchemaRes = z.object({
   bookings: z.array(BookingSchema),
-  close_time: z.string(),
-  open_time: z.string(),
+  close_time_minutes: z.number(),
+  open_time_minutes: z.number(),
 });
+
 
 export type BookingRes = z.infer<typeof BookingSchemaRes>;
 export type Booking = z.infer<typeof BookingSchema>;
+
+export interface HistoryRes {
+  bookings: any[];
+}
+
+export interface RevenueRes {
+  revenue: any[];
+  total_revenue: number;
+  total_bookings: number;
+}
+
+export interface DashboardRes {
+  owner_name: string;
+  confirmed_slots_today: number;
+  traffic_today: number;
+  today_agenda: AgendaItem[];
+  next_outlook: AgendaItem[];
+}
 
 export interface AppState {
   isLoggedIn: boolean;
@@ -106,3 +124,14 @@ export interface GroundType {
   closing: string;
   rate: number;
 }
+
+export type AgendaItem = {
+  id: string;
+  ground_name: string;
+  client_name: string;
+  client_mobile: string;
+  start_time: string;
+  end_time: string;
+  amount: number;
+  status: string;
+};

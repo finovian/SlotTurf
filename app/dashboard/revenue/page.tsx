@@ -1,22 +1,26 @@
 "use client";
 
-import { useBookings, useTurfs } from "@/hooks/use-data";
+import { useHistory, useTurfs } from "@/hooks/use-data";
 import { useUIStore } from "@/lib/store";
 import RevenueView from "@/views/RevenueView";
 
-
-
 export default function RevenuePage() {
   const { selectedTurfId, setSelectedTurfId } = useUIStore();
-  const { data: turfs  } = useTurfs();
-  const { data: bookings  } = useBookings();
+  const { data: turfs } = useTurfs();
+  const { data: history } = useHistory({
+    ground_id: selectedTurfId === "all" ? "" : (selectedTurfId ?? ""),
+  });
 
-  const isAll = selectedTurfId === 'all';
-  const activeScopedBookings = bookings?.bookings?.filter(b => isAll ? true : b.turfID === selectedTurfId);
+  const bookings =
+    history?.bookings?.map((b: any) => ({
+      ...b,
+      date: b.booking_date,
+      turfID: b.edges?.ground?.id,
+    })) ?? [];
 
   return (
     <RevenueView
-      bookings={activeScopedBookings ?? []}
+      bookings={bookings}
       turfs={turfs?.ground ?? []}
       selectedTurfId={selectedTurfId}
       onSelectTurf={setSelectedTurfId}
