@@ -19,11 +19,12 @@ interface UIStore extends Omit<AppState, 'currentView'> {
   setSelectedTurfId: (id: string | null) => void;
   setTempMobile: (mobile: string | undefined) => void;
   setEditingBooking: (booking: Booking | null) => void;
+  setSelectedDate: (date: string | null) => void;
+  setSelectedSlots: (slots: string[]) => void;
   setCurrentView: (view: any) => void;
   reset: () => void;
   showToast: (message: string, type?: 'success' | 'error' | 'info') => void;
   clearToast: () => void;
-  
 }
 
 const STORAGE_KEY = 'turfflow_ui_v6';
@@ -36,6 +37,8 @@ export const useUIStore = create<UIStore>()(
       selectedTurfId: null,
       tempMobile: undefined,
       editingBooking: null,
+      selectedDate: null,
+      selectedSlots: [],
       currentView: undefined,
       subscriptionActive: true,
       toast: null,
@@ -54,6 +57,8 @@ export const useUIStore = create<UIStore>()(
       clearToast: () => set({ toast: null }),
 
       setEditingBooking: (booking) => set({ editingBooking: booking }),
+      setSelectedDate: (date) => set({ selectedDate: date }),
+      setSelectedSlots: (slots) => set({ selectedSlots: slots }),
       
       reset: () => set({
         isLoggedIn: false,
@@ -61,6 +66,8 @@ export const useUIStore = create<UIStore>()(
         selectedTurfId: null,
         tempMobile: undefined,
         editingBooking: null,
+        selectedDate: null,
+        selectedSlots: [],
         currentView: undefined
       }),
     }),
@@ -71,6 +78,9 @@ export const useUIStore = create<UIStore>()(
         owner: state.owner,
         selectedTurfId: state.selectedTurfId,
         currentView: state.currentView,
+        selectedDate: state.selectedDate,
+        selectedSlots: state.selectedSlots,
+        editingBooking: state.editingBooking,
       }),
     }
   )

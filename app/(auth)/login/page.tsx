@@ -1,12 +1,15 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useUIStore } from "../../../lib/store";
 import LoginView from "../../../views/LoginView";
 import { useRequestOTP } from "@/hooks/use-data";
+import { Suspense } from "react";
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect_to");
 
   const { mutate: requestOTP, isPending } = useRequestOTP();
 
@@ -18,7 +21,10 @@ export default function LoginPage() {
     requestOTP(mobile, {
       onSuccess: () => {
         showToast(`OTP sent to +91 ${mobile}`, "success");
-        router.push("/verify");
+        const nextUrl = redirectTo 
+          ? `/verify?redirect_to=${encodeURIComponent(redirectTo)}` 
+          : "/verify";
+        router.push(nextUrl);
       },
       onError: (err) => {
         showToast(err.message || "Failed to send OTP", "error");
@@ -26,11 +32,24 @@ export default function LoginPage() {
     });
   };
 
-
   return (
     <LoginView
       onSendOTP={handleSendOTP}
       tempMobile={tempMobile}
     />
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-pulse font-bold text-neutral-400 uppercase tracking-widest text-xs">
+          Loading login...
+        </div>
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }

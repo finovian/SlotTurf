@@ -1,27 +1,41 @@
 "use client";
 
+import { useEffect } from "react";
 import BookingConfirmedView from "@/views/BookingConfirmedView";
 import { useRouter } from "next/navigation";
+import { useUIStore } from "@/lib/store";
 
-
-const mockBooking = {
-  id: "B-MOCK123",
-  client_name: "John Doe",
-  client_mobile: "9876543210",
-  date: "20-11-2025",
-  start_time: "18:00",
-  end_time: "19:00",
-  hours: 1,
-  amount: 1500,
-  status: "booked",
-  turfID: "T-1",
-} as const;
 export default function BookingConfirmedPage() {
   const router = useRouter();
+  const { editingBooking, setSelectedDate, setSelectedSlots, setEditingBooking } = useUIStore();
+
+  useEffect(() => {
+    // Clear the selection/editing state after successful booking
+    return () => {
+      setSelectedDate(null);
+      setSelectedSlots([]);
+      setEditingBooking(null);
+    };
+  }, [setSelectedDate, setSelectedSlots, setEditingBooking]);
 
   const handleDone = () => {
-    router.replace("/dashboard");
+    router.replace("/dashboard/availability");
   };
 
-  return <BookingConfirmedView booking={mockBooking} onDone={handleDone} />;
+  // If we don't have a booking in store (e.g. refresh), show a fallback or redirect
+  // For now, using the store's editingBooking if available, otherwise a placeholder
+  const booking = editingBooking || {
+    id: "B-NEW",
+    client_name: "Customer",
+    client_mobile: "",
+    date: "",
+    start_time: "",
+    end_time: "",
+    hours: 1,
+    amount: 0,
+    status: "booked",
+    turfID: "",
+  };
+
+  return <BookingConfirmedView booking={booking as any} onDone={handleDone} />;
 }

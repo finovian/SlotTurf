@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 
 export default function EditProfilePage() {
   const router = useRouter();
-  const { owner, setOwner } = useUIStore();
+  const { showToast, owner, setOwner } = useUIStore();
   const { data, isLoading } = useProfile();
 
   const { mutate } = useProfileUpdate();
@@ -16,18 +16,21 @@ export default function EditProfilePage() {
   const handleUpdate = (updatedOwner: Owner) => {
     mutate(
       {
-        newMobile: owner?.mobile,
-        user_name: owner?.owner_name,
+        newMobile: updatedOwner.mobile,
+        user_name: updatedOwner.owner_name,
       },
       {
-        onSuccess: () => {},
+        onSuccess: () => {
+          setOwner(updatedOwner);
+          showToast("Profile updated successfully", "success");
+          router.push("/dashboard/settings");
+        },
         onError: (err) => {
-          console.log("err", err);
+          console.error("Profile update error:", err);
+          showToast("Failed to update profile", "error");
         },
       },
     );
-
-    setOwner(updatedOwner);
   };
 
   const handleBack = () => {

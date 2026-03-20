@@ -7,6 +7,13 @@ import {
   ChevronLeft,
   ChevronRight,
   Calendar as CalendarIcon,
+  Clock,
+  User,
+  Phone,
+  Calendar,
+  Trash2,
+  Edit2,
+  X,
 } from "lucide-react";
 
 import { Booking } from "../types";
@@ -20,6 +27,7 @@ import dayjs from "dayjs";
 import { useBookings, useCancelBooking, useTurfs } from "@/hooks/use-data";
 import { useRouter } from "next/navigation";
 import { useUIStore } from "@/lib/store";
+import ConfirmationModal from "@/components/Modal";
 
 /* ---------------- Utils ---------------- */
 
@@ -36,12 +44,12 @@ const timeToMinutes = (time: string) => {
 /* ---------------- Component ---------------- */
 
 const AvailabilityView = ({}) => {
-  const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(
     new Date().toISOString().split("T")[0],
   );
 
-  const [activeActionSlot, setActiveActionSlot] = useState<string | null>(null);
+  const [activeBooking, setActiveBooking] = useState<Booking | null>(null);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [selectedSlots, setSelectedSlots] = React.useState<string[]>([]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -49,20 +57,35 @@ const AvailabilityView = ({}) => {
   const date = dayjs(selectedDate).format("YYYY-MM-DD");
   const router = useRouter();
 
-  const { data: turfs } = useTurfs();
-  const { selectedTurfId, setSelectedTurfId, setEditingBooking } = useUIStore();
+  const { data: turfs, isLoading: isLoadingTurfs } = useTurfs();
+  const {
+    selectedTurfId,
+    setSelectedTurfId,
+    setEditingBooking,
+    setSelectedDate: setStoreSelectedDate,
+    setSelectedSlots: setStoreSelectedSlots,
+  } = useUIStore();
   const cancelBooking = useCancelBooking();
 
   useEffect(() => {
-    if (turfs?.ground && !isLoading && !selectedTurfId) {
-      setSelectedTurfId(turfs?.ground?.[0]?.id);
+    // If we have turfs and no selectedTurfId, pick the first one
+    if (turfs?.ground?.length && !selectedTurfId && !isLoadingTurfs) {
+      setSelectedTurfId(turfs.ground[0].id);
     }
-  }, [turfs?.ground?.length]);
+    // Also handle case where selectedTurfId might be invalid (e.g. from a different user session)
+    if (turfs?.ground?.length && selectedTurfId && !isLoadingTurfs) {
+      const exists = turfs.ground.some(t => t.id === selectedTurfId);
+      if (!exists) {
+        setSelectedTurfId(turfs.ground[0].id);
+      }
+    }
+  }, [turfs?.ground, selectedTurfId, isLoadingTurfs, setSelectedTurfId]);
+
   const activeTurf = turfs?.ground?.find((t) => t.id === selectedTurfId);
 
   const {
     data: bookings,
-    isLoading,
+    isLoading: isLoadingBookings,
     isError,
   } = useBookings(activeTurf?.id, date);
 
@@ -73,19 +96,27 @@ const AvailabilityView = ({}) => {
       )
     : [];
 
-    console.log('timeSlots', minutesToHHMM(bookings?.open_time_minutes ?? 0), minutesToHHMM(bookings?.close_time_minutes ?? 0))
-
   const isAll = selectedTurfId === "all";
 
   const onSlotClick = () => {
     setEditingBooking(null);
+    setStoreSelectedDate(selectedDate);
+    setStoreSelectedSlots(selectedSlots);
     router.push("/dashboard/availability/add-booking");
   };
 
   const onEditBooking = (booking: Booking) => {
     setEditingBooking(booking);
+    setStoreSelectedDate(null);
+    setStoreSelectedSlots([]);
     router.push("/dashboard/availability/add-booking");
   };
+
+  const clayShadow =
+    "shadow-[10px_10px_20px_rgba(0,0,0,0.05),inset_-6px_-6px_12px_rgba(0,0,0,0.05),inset_6px_6px_12px_rgba(255,255,255,0.8)]";
+
+  const formatTime = (utcTime: string) =>
+    dayjs.utc(utcTime).local().format("HH:mm");
 
   const nextDates = Array.from({ length: 60 }, (_, i) => {
     const d = new Date();
@@ -117,11 +148,15 @@ const AvailabilityView = ({}) => {
     });
   };
 
-  const handleCancelClick = (e: React.MouseEvent, id: string) => {
-    e.stopPropagation();
-    console.log("id", id);
-    cancelBooking.mutate(id);
-    setActiveActionSlot(null);
+  const handleCancel = () => {
+    if (activeBooking) {
+      cancelBooking.mutate(activeBooking.id, {
+        onSuccess: () => {
+          setShowConfirm(false);
+          setActiveBooking(null);
+        },
+      });
+    }
   };
 
   const scroll = (direction: "left" | "right") => {
@@ -134,7 +169,7 @@ const AvailabilityView = ({}) => {
     });
   };
 
-  if (isLoading) return <AvailabilitySkeleton />;
+  if (isLoadingTurfs || isLoadingBookings) return <AvailabilitySkeleton />;
 
   return (
     <div className="py-4 space-y-6 animate-in fade-in duration-500">
@@ -283,11 +318,7 @@ const AvailabilityView = ({}) => {
             selectedDate={selectedDate}
             timeSlots={timeSlots}
             getSlotStatus={getSlotStatus}
-            activeActionSlot={activeActionSlot}
-            setActiveActionSlot={setActiveActionSlot}
-            onSlotClick={onSlotClick}
-            onEditBooking={onEditBooking}
-            handleCancelClick={handleCancelClick}
+            onSlotClick={(b: Booking) => setActiveBooking(b)}
             setSelectedSlots={setSelectedSlots}
             selectedSlots={selectedSlots}
           />
@@ -296,15 +327,26 @@ const AvailabilityView = ({}) => {
             selectedDate={selectedDate}
             timeSlots={timeSlots}
             getSlotStatus={getSlotStatus}
-            activeActionSlot={activeActionSlot}
-            setActiveActionSlot={setActiveActionSlot}
-            onSlotClick={onSlotClick}
-            onEditBooking={onEditBooking}
-            handleCancelClick={handleCancelClick}
+            onSlotClick={(b: Booking) => setActiveBooking(b)}
             setSelectedSlots={setSelectedSlots}
             selectedSlots={selectedSlots}
           />
         </>
+      )}
+
+      {selectedSlots.length > 0 && (
+        <div className="fixed bottom-24 left-4 right-4 bg-neutral-900 text-white rounded-2xl px-4 py-3 flex items-center justify-between z-40 lg:hidden text-center">
+          <div className="flex-1">
+            <p className="text-xs font-bold">
+              {selectedSlots[0]} – {selectedSlots[selectedSlots.length - 1]}
+            </p>
+            <p className="text-[10px] text-neutral-400">
+              {selectedSlots.length} hr · ₹
+              {selectedSlots.length * (activeTurf?.hourly_rate ?? 0)}
+            </p>
+          </div>
+          <p className="text-xs font-bold text-emerald-400">Tap + to book</p>
+        </div>
       )}
 
       {selectedSlots.length > 0 && (
@@ -317,6 +359,71 @@ const AvailabilityView = ({}) => {
           </button>
         </div>
       )}
+
+      {/* Action Modal */}
+      {activeBooking && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+          <div
+            className="absolute inset-0 bg-neutral-900/40 backdrop-blur-md animate-in fade-in"
+            onClick={() => setActiveBooking(null)}
+          />
+          <div
+            className={`relative bg-white w-full max-w-sm rounded-[56px] overflow-hidden animate-in slide-in-from-bottom-12 duration-500 ${clayShadow}`}
+          >
+            <div className="p-10 space-y-8">
+              <div className="text-center space-y-3">
+                <div
+                  className={`w-20 h-20 bg-neutral-50 text-neutral-900 rounded-[32px] flex items-center justify-center mx-auto mb-4 ${clayShadow}`}
+                >
+                  <Calendar size={32} />
+                </div>
+                <h4 className="text-2xl font-bold text-neutral-900 tracking-tight">
+                  {activeBooking.client_name}
+                </h4>
+                <p className="text-[11px] font-black text-neutral-400 uppercase tracking-widest flex items-center justify-center gap-2">
+                  <Phone size={12} className="text-emerald-500" /> +91{" "}
+                  {activeBooking.client_mobile}
+                </p>
+                <p className="text-xs font-bold text-neutral-500">
+                  {formatTime(activeBooking.start_time)} –{" "}
+                  {formatTime(activeBooking.end_time)} · {activeTurf?.name}
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  onClick={() => onEditBooking(activeBooking)}
+                  className={`w-full h-16 bg-white border border-neutral-50 text-neutral-900 font-bold rounded-[24px] flex items-center justify-center gap-2 active:scale-95 transition-all ${clayShadow}`}
+                >
+                  <Edit2 size={18} /> Edit
+                </button>
+                <button
+                  onClick={() => setShowConfirm(true)}
+                  className={`w-full h-16 bg-white border border-red-50 text-red-600 font-bold rounded-[24px] flex items-center justify-center gap-2 active:scale-95 transition-all ${clayShadow}`}
+                >
+                  <Trash2 size={18} /> Cancel
+                </button>
+              </div>
+              <button
+                onClick={() => setActiveBooking(null)}
+                className="w-full text-neutral-400 hover:text-neutral-600 font-bold text-[11px] uppercase tracking-[0.3em] transition-all active:scale-95"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <ConfirmationModal
+        isOpen={showConfirm}
+        onClose={() => setShowConfirm(false)}
+        onConfirm={handleCancel}
+        title="Cancel Session?"
+        description="This slot will be released and available for new bookings."
+        confirmLabel="Yes, Cancel"
+        isDanger={true}
+      />
     </div>
   );
 };

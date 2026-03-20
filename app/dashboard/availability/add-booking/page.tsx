@@ -23,9 +23,17 @@ export default function AddBookingPage() {
   const handleAddBooking = (booking: Booking) => {
     console.log('editingBooking', editingBooking)
     if (editingBooking) {
-      editBooking.mutate(booking);
+      editBooking.mutate(booking, {
+        onSuccess: () => {
+          router.push("/dashboard/availability/add-booking/confirmed");
+        }
+      });
     } else {
-      saveBooking.mutate(booking);
+      saveBooking.mutate(booking, {
+        onSuccess: () => {
+          router.push("/dashboard/availability/add-booking/confirmed");
+        }
+      });
     }
   };
 

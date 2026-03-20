@@ -1,5 +1,6 @@
 "use client";
 
+import { TrialBanner } from "@/components/TrialBanner";
 import { useStore } from "@/lib/store";
 import {
   BarChart3,
@@ -70,6 +71,7 @@ export default function Layout({
 
   return (
     <div className="min-h-screen bg-neutral-50 flex flex-col font-ubuntu scrollbar-hide">
+       <TrialBanner />
       {/* SaaS Sidebar (Desktop only) */}
       <aside className="hidden lg:flex w-72 h-screen fixed left-0 top-0 bg-white border-r border-neutral-100 flex-col z-60">
         <div className="p-8 flex items-center gap-3">

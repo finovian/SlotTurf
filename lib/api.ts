@@ -1,4 +1,12 @@
-import { Booking, BookingRes, GroundType, TurfResponse, HistoryRes, RevenueRes, DashboardRes } from "../types";
+import {
+  Booking,
+  BookingRes,
+  GroundType,
+  TurfResponse,
+  HistoryRes,
+  RevenueRes,
+  DashboardRes,
+} from "../types";
 import { apiFetch } from "./apiClient";
 
 export const api = {
@@ -89,7 +97,7 @@ export const api = {
     });
   },
 
-  addTuf: async (turf: any) => {
+  addTurf: async (turf: any) => {
     return apiFetch("/ground/create", {
       method: "POST",
       body: JSON.stringify({
@@ -196,5 +204,29 @@ export const api = {
 
   fetchSubscription: async () => {
     return apiFetch("/profile/subscription", { method: "GET" });
+  },
+
+  fetchCustomers: async (params: { filter?: string; search?: string }) => {
+    const q = new URLSearchParams();
+    if (params.filter) q.set("filter", params.filter);
+    if (params.search) q.set("search", params.search);
+    return apiFetch(`/customers?${q.toString()}`, { method: "GET" });
+  },
+
+  fetchCustomerDetail: async (mobile: string) => {
+    return apiFetch(`/customers/${mobile}`, { method: "GET" });
+  },
+
+  createCheckout: async (plan: string) => {
+    return apiFetch("/subscription/checkout", {
+      method: "POST",
+      body: JSON.stringify({ plan }),
+    });
+  },
+
+  cancelSubscription: async () => {
+    return apiFetch("/subscription/cancel", {
+      method: "POST",
+    });
   },
 };

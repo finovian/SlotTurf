@@ -39,9 +39,7 @@ export const TurfSchema = z.object({
   is_active: z.enum(["active", "disabled"]),
 });
 
-
 export const userSchema = z.object({
-
   // id: z.string(),
   // name: z.string().min(1, "Name is required"),
   // hourly_rate: z.number().min(0),
@@ -60,7 +58,7 @@ export const ProfileResponse = z.object({
 
 export type TurfResponse = z.infer<typeof TurfSchemaRes>;
 
-export type ProfileResponse = z.infer<typeof ProfileResponse>
+export type ProfileResponse = z.infer<typeof ProfileResponse>;
 
 export type Turf = z.infer<typeof TurfSchema>;
 
@@ -76,7 +74,7 @@ export const BookingSchema = z.object({
   hours: z.number(),
   amount: z.number(),
   status: z.enum(["booked", "cancelled", "completed"]),
-  turfID : z.string()
+  turfID: z.string(),
 });
 
 export const BookingSchemaRes = z.object({
@@ -84,7 +82,6 @@ export const BookingSchemaRes = z.object({
   close_time_minutes: z.number(),
   open_time_minutes: z.number(),
 });
-
 
 export type BookingRes = z.infer<typeof BookingSchemaRes>;
 export type Booking = z.infer<typeof BookingSchema>;
@@ -114,6 +111,8 @@ export interface AppState {
   selectedTurfId: string | null;
   tempMobile?: string;
   editingBooking?: Booking | null;
+  selectedDate?: string | null;
+  selectedSlots?: string[];
   subscriptionActive: boolean;
 }
 
@@ -135,3 +134,28 @@ export type AgendaItem = {
   amount: number;
   status: string;
 };
+
+export type CustomerSummary = {
+  client_mobile: string;
+  client_name: string;
+  total_bookings: number;
+  total_cancelled: number;
+  total_spent: number;
+  total_hours: number;
+  last_visit: string;
+  is_repeat: boolean;
+  has_cancelled: boolean;
+};
+
+export type CustomerDetail = CustomerSummary & {
+  bookings: Booking[];
+};
+
+export interface Subscription {
+  plan: "trial" | "basic" | "standard" | "pro";
+  status: "active" | "expired" | "cancelled";
+  max_bookings: number;
+  used_bookings: number;
+  days_remaining: number;
+  end_date: string;
+}

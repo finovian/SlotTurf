@@ -239,7 +239,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({
 
       {/* Action Modal */}
       {activeItem && (
-        <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-6">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
           <div
             className="absolute inset-0 bg-neutral-900/40 backdrop-blur-md animate-in fade-in"
             onClick={() => setActiveItem(null)}
@@ -277,7 +277,7 @@ const DashboardView: React.FC<DashboardViewProps> = ({
               </div>
               <button
                 onClick={() => setActiveItem(null)}
-                className="w-full text-neutral-300 font-bold text-[11px] uppercase tracking-[0.3em]"
+                className="w-full text-neutral-400 hover:text-neutral-600 font-bold text-[11px] uppercase tracking-[0.3em] transition-all active:scale-95"
               >
                 Dismiss
               </button>
