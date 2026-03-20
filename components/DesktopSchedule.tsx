@@ -1,17 +1,16 @@
 "use client";
 
 import { Check, Clock, Plus, X } from "lucide-react";
-import { toHHMM } from "@/utils/helpers";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 import { SLOT_UI, SlotState } from "@/const/SlotsUI";
 
 const DesktopSchedule = ({
   selectedDate,
   timeSlots,
   getSlotStatus,
-  activeActionSlot,
-  setActiveActionSlot,
-  onEditBooking,
-  handleCancelClick,
+  onSlotClick,
   setSelectedSlots,
   selectedSlots,
 }: any) => {
@@ -28,7 +27,7 @@ const DesktopSchedule = ({
   const handleSlotSelect = (time: string) => {
     const isBooked = getSlotStatus(time);
     if (isBooked) {
-      setActiveActionSlot(time);
+      onSlotClick(isBooked);
       return;
     }
 
@@ -97,7 +96,6 @@ const DesktopSchedule = ({
             } else {
               ui = SLOT_UI.available; // fallback
             }
-            console.log("object", booking);
             const isSelected = selectedSlots.includes(time);
 
             return (
@@ -106,9 +104,9 @@ const DesktopSchedule = ({
                 <div
                   className={`h-full flex flex-col justify-between p-6 rounded-4xl border transition-all duration-300
           ${isSelected ? "bg-[#0099662b] border-emerald-600 shadow-xl" : ui.card}
-          ${ui.clickable ? "cursor-pointer" : "cursor-not-allowed"}
+          cursor-pointer
         `}
-                  onClick={() => ui.clickable && handleSlotSelect(time)}
+                  onClick={() => handleSlotSelect(time)}
                 >
                   {/* Time + Icon */}
                   <div className="flex justify-between items-start mb-6">
@@ -130,10 +128,11 @@ const DesktopSchedule = ({
                     {booking ? (
                       <>
                         <p className="text-base font-bold text-black truncate">
-                          {booking?.client_name}
+                          {booking.client_name}
                         </p>
-                        <p className="text-[10px] font-bold text-neutral-800 uppercase tracking-widest">
-                          {toHHMM(booking?.end_time)} End
+                        <p className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">
+                          Until{" "}
+                          {dayjs.utc(booking.end_time).local().format("h:mm A")}
                         </p>
                       </>
                     ) : (
@@ -141,49 +140,13 @@ const DesktopSchedule = ({
                         <p className="text-sm font-bold text-emerald-600">
                           Available
                         </p>
-                        <p className="text-[10px] font-bold text-black uppercase tracking-widest">
+                        <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-widest">
                           Open Slot
                         </p>
                       </>
                     )}
                   </div>
                 </div>
-
-                {/* Actions Overlay (only for BOOKED) */}
-                {booking?.status === "booked" && activeActionSlot === time && (
-                  <div className="absolute inset-0 bg-neutral-900 rounded-4xl p-4 flex flex-col justify-center gap-2 z-10">
-                    <p className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest text-center mb-2">
-                      Actions
-                    </p>
-
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onEditBooking(booking);
-                      }}
-                      className="h-18 cursor-pointer bg-neutral-800 text-white rounded-xl text-xs font-bold uppercase"
-                    >
-                      Edit
-                    </button>
-
-                    <button
-                      onClick={(e) => handleCancelClick(e, booking?.id)}
-                      className="h-18  cursor-pointer bg-red-900/40 text-red-400 rounded-xl text-xs font-bold uppercase"
-                    >
-                      Cancel
-                    </button>
-
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setActiveActionSlot(null);
-                      }}
-                      className="h-18 cursor-pointer text-neutral-500 text-xs font-bold uppercase"
-                    >
-                      Close
-                    </button>
-                  </div>
-                )}
               </div>
             );
           })}

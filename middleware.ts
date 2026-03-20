@@ -13,7 +13,8 @@ export function middleware(request: NextRequest) {
 
   // 🚫 Not logged in → trying to access protected route
   if (!accessToken && !isPublicRoute) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    const callbackUrl = encodeURIComponent(`${pathname}${request.nextUrl.search}`);
+    return NextResponse.redirect(new URL(`/login?redirect_to=${callbackUrl}`, request.url));
   }
 
   if (accessToken && isPublicRoute) {

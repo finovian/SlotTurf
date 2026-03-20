@@ -1,11 +1,12 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Turf, Booking } from '../types';
 // Fix: Use lib/helpers instead of deprecated utils/helpers
-import { calculateDuration, formatCurrency } from '../lib/helpers';
-import { User, Phone, Calendar as CalendarIcon, Clock, Save, IndianRupee } from 'lucide-react';
+import { calculateDuration, formatCurrency, HHMMToMinutes, minutesToHHMM } from '../lib/helpers';
+import { User, Phone, Calendar as CalendarIcon, Clock, Save, IndianRupee, ArrowLeft } from 'lucide-react';
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import { useUIStore } from '@/lib/store';
+import { useRouter } from 'next/navigation';
 
 dayjs.extend(utc);
 
@@ -17,22 +18,48 @@ interface AddBookingViewProps {
 }
 
 const AddBookingView: React.FC<AddBookingViewProps> = ({ turf, onAdd, onConfirm, initialData }) => {
-  const [formData, setFormData] = useState({
-  clientName: initialData?.client_name || '',
-  mobileNumber: initialData?.client_mobile || '',
-  date: initialData?.date 
-    ? dayjs(initialData.date).format('YYYY-MM-DD') 
-    : new Date().toISOString().split('T')[0],
-  startTime: initialData?.start_time 
-    ? dayjs.utc(initialData.start_time).local().format('HH:mm') 
-    : '17:00',
-  endTime: initialData?.end_time 
-    ? dayjs.utc(initialData.end_time).local().format('HH:mm') 
-    : '18:00',
-  totalAmount: initialData?.amount || turf?.hourly_rate
-});
+  const router = useRouter();
+  const { selectedDate: storeDate, selectedSlots } = useUIStore();
 
-  console.log('initialData', initialData)
+  const parsedSlots = useMemo(() => {
+    if (!selectedSlots || selectedSlots.length === 0) return null;
+
+    // Helper to parse "05:00 PM" or "17:00" to minutes
+    const timeToMin = (t: string) => {
+      if (t.includes(' ')) {
+        const [time, modifier] = t.split(' ');
+        let [h, m] = time.split(':').map(Number);
+        if (modifier === 'PM' && h !== 12) h += 12;
+        if (modifier === 'AM' && h === 12) h = 0;
+        return h * 60 + (m || 0);
+      }
+      return HHMMToMinutes(t);
+    };
+
+    const sortedMins = selectedSlots.map(timeToMin).sort((a, b) => a - b);
+    const startMin = sortedMins[0];
+    const endMin = sortedMins[sortedMins.length - 1] + 60; // Assume 1hr slots
+
+    return {
+      start: minutesToHHMM(startMin),
+      end: minutesToHHMM(endMin)
+    };
+  }, [selectedSlots]);
+
+  const [formData, setFormData] = useState({
+    clientName: initialData?.client_name || '',
+    mobileNumber: initialData?.client_mobile || '',
+    date: initialData?.date 
+      ? dayjs(initialData.date).format('YYYY-MM-DD') 
+      : (storeDate || new Date().toISOString().split('T')[0]),
+    startTime: initialData?.start_time 
+      ? dayjs.utc(initialData.start_time).local().format('HH:mm') 
+      : (parsedSlots?.start || '17:00'),
+    endTime: initialData?.end_time 
+      ? dayjs.utc(initialData.end_time).local().format('HH:mm') 
+      : (parsedSlots?.end || '18:00'),
+    totalAmount: initialData?.amount || 0
+  });
 
   const [duration, setDuration] = useState(initialData?.hours || 1);
   const [manualPrice, setManualPrice] = useState(!!initialData);
@@ -42,10 +69,13 @@ const AddBookingView: React.FC<AddBookingViewProps> = ({ turf, onAdd, onConfirm,
       const hours = calculateDuration(formData.startTime, formData.endTime);
       if (hours > 0) {
         setDuration(hours);
-        setFormData(prev => ({ ...prev, totalAmount: hours * turf?.hourly_rate }));
+        setFormData(prev => ({ ...prev, totalAmount: hours * (turf?.hourly_rate || 0) }));
       }
+    } else {
+       const hours = calculateDuration(formData.startTime, formData.endTime);
+       setDuration(hours);
     }
-  }, [formData.startTime, formData.endTime, turf.hourly_rate, manualPrice]);
+  }, [formData.startTime, formData.endTime, turf?.hourly_rate, manualPrice]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -64,11 +94,28 @@ const AddBookingView: React.FC<AddBookingViewProps> = ({ turf, onAdd, onConfirm,
     };
 
     onAdd(finalBooking);
-    // onConfirm(finalBooking);
   };
 
   return (
     <div className="py-4 space-y-6 animate-in fade-in duration-500">
+      {/* Header */}
+      <div className="flex items-center gap-4 px-1">
+        <button 
+          onClick={() => router.back()}
+          className="w-10 h-10 bg-white border border-neutral-200 rounded-xl flex items-center justify-center text-neutral-400 hover:text-neutral-900 transition-all active:scale-95"
+        >
+          <ArrowLeft size={20} />
+        </button>
+        <div>
+          <h2 className="text-sm font-bold text-neutral-900 uppercase tracking-widest">
+            {initialData ? 'Edit Booking' : 'New Booking'}
+          </h2>
+          <p className="text-[10px] font-bold text-neutral-400 uppercase tracking-tight">
+            {turf?.name}
+          </p>
+        </div>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="bg-white rounded-4xl border border-neutral-100 p-6 space-y-6 shadow-sm">
           {/* Client Details */}
@@ -182,7 +229,7 @@ const AddBookingView: React.FC<AddBookingViewProps> = ({ turf, onAdd, onConfirm,
 
             <div className="flex items-center justify-between px-2 py-2 bg-neutral-50 rounded-xl text-[10px] font-bold text-neutral-400 uppercase tracking-widest">
               <span>Duration: {duration} hrs</span>
-              <span>Rate: {formatCurrency(turf?.hourly_rate)}/hr</span>
+              <span>Rate: {formatCurrency(turf?.hourly_rate || 0)}/hr</span>
             </div>
           </div>
         </div>

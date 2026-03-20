@@ -3,6 +3,7 @@ import { Owner } from "../types";
 import { User, Store, Smartphone, Save } from "lucide-react";
 import ConfirmationModal from "@/components/Modal";
 import { useVerifyNum } from "@/hooks/use-data";
+import { useUIStore } from "@/lib/store";
 
 interface EditProfileViewProps {
   owner: Owner;
@@ -16,10 +17,10 @@ const EditProfileView: React.FC<EditProfileViewProps> = ({
   onBack,
 }) => {
   const [formData, setFormData] = useState<Owner>(owner);
-  const [isVerifyingMobile, setIsVerifyingMobile] = useState(false);
   const [otp, setOtp] = useState("");
   const [pendingMobile, setPendingMobile] = useState("");
   const [showOtpModal, setShowOtpModal] = useState(false);
+  const { showToast } = useUIStore();
 
   const { mutate } = useVerifyNum();
 
@@ -31,10 +32,13 @@ const EditProfileView: React.FC<EditProfileViewProps> = ({
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    onUpdate(formData);
     if (formData?.mobile !== owner?.mobile) {
       setPendingMobile(formData.mobile);
       setShowOtpModal(true);
+      // In a real flow, you might call a mutation to SEND the OTP here
+      showToast("Verification code sent", "info");
+    } else if (formData?.owner_name !== owner?.owner_name) {
+      onUpdate(formData);
     } else {
       onBack();
     }
@@ -48,16 +52,18 @@ const EditProfileView: React.FC<EditProfileViewProps> = ({
         },
         {
           onSuccess: () => {
+            onUpdate({ ...formData, mobile: pendingMobile });
+            setShowOtpModal(false);
             setOtp("");
           },
           onError: (err) => {
-            console.log("err", err);
+            console.error("OTP verification error:", err);
+            showToast("Invalid verification code", "error");
           },
         },
       );
-      onUpdate({ ...formData, mobile: pendingMobile });
-      setShowOtpModal(false);
-      onBack();
+    } else {
+      showToast("Please enter a 4-digit code", "error");
     }
   };
 

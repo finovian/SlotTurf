@@ -1,5 +1,5 @@
 import { api } from "@/lib/api";
-import { GroundType } from "@/types";
+import { CustomerDetail, GroundType, Subscription } from "@/types";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 export const useRequestOTP = () => {
@@ -115,7 +115,7 @@ export const useSaveTurf = () => {
 export const useAddTurf = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: api.addTuf,
+    mutationFn: api.addTurf,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["turfs"] });
     },
@@ -132,16 +132,20 @@ export const useDeleteTurf = () => {
   });
 };
 
-
 export const useDashboard = () => {
   return useQuery({
     queryKey: ["dashboard"],
     queryFn: api.fetchDashboard,
-    staleTime: 30000, 
+    staleTime: 30000,
   });
 };
 
-export const useHistory = (params: { ground_id?: string; search?: string; from?: string; to?: string }) => {
+export const useHistory = (params: {
+  ground_id?: string;
+  search?: string;
+  from?: string;
+  to?: string;
+}) => {
   return useQuery({
     queryKey: ["history", params],
     queryFn: () => api.fetchHistory(params),
@@ -149,7 +153,11 @@ export const useHistory = (params: { ground_id?: string; search?: string; from?:
   });
 };
 
-export const useRevenue = (params: { ground_id?: string; from?: string; to?: string }) => {
+export const useRevenue = (params: {
+  ground_id?: string;
+  from?: string;
+  to?: string;
+}) => {
   return useQuery({
     queryKey: ["revenue", params],
     queryFn: () => api.fetchRevenue(params),
@@ -160,7 +168,35 @@ export const useRevenue = (params: { ground_id?: string; from?: string; to?: str
 export const useSubscription = () => {
   return useQuery({
     queryKey: ["subscription"],
-    queryFn: api.fetchSubscription,
+    queryFn: () => api.fetchSubscription() as Promise<Subscription>,
     staleTime: 60000,
+  });
+};
+
+export const useCustomers = (params: { filter?: string; search?: string }) => {
+  return useQuery({
+    queryKey: ["customers", params],
+    queryFn: () => api.fetchCustomers(params),
+    staleTime: 30000,
+  });
+};
+
+export const useCustomerDetail = (mobile: string) => {
+  return useQuery({
+    queryKey: ["customer", mobile],
+    queryFn: () => api.fetchCustomerDetail(mobile) as Promise<CustomerDetail>,
+    enabled: Boolean(mobile),
+    staleTime: 30000,
+  });
+};
+
+export const useCancelSubscription = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: api.cancelSubscription,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["subscription"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+    },
   });
 };

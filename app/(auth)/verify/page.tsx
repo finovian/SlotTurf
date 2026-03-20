@@ -1,13 +1,16 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useUIStore } from "../../../lib/store";
 import { useVerifyOTP } from "@/hooks/use-data";
 import VerifyView from "@/views/verifyView";
 import Cookies from "js-cookie";
+import { Suspense } from "react";
 
-export default function LoginPage() {
+function VerifyContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect_to");
 
   const { mutate: verifyOTP } = useVerifyOTP();
 
@@ -27,6 +30,11 @@ export default function LoginPage() {
             sameSite: "lax",
           });
 
+          if (redirectTo) {
+            router.replace(redirectTo);
+            return;
+          }
+
           if (data?.isActive) {
             router.replace("/dashboard");
           } else {
@@ -41,4 +49,18 @@ export default function LoginPage() {
   };
 
   return <VerifyView onVerifyOTP={handleVerifyOTP} tempMobile={tempMobile} />;
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-pulse font-bold text-neutral-400 uppercase tracking-widest text-xs">
+          Verifying...
+        </div>
+      </div>
+    }>
+      <VerifyContent />
+    </Suspense>
+  );
 }

@@ -1,17 +1,16 @@
 "use client";
 
 import { SLOT_UI, SlotState } from "@/const/SlotsUI";
-import { toHHMM } from "@/utils/helpers";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+dayjs.extend(utc);
 import { Clock } from "lucide-react";
 
 const MobileSchedule = ({
   selectedDate,
   timeSlots,
   getSlotStatus,
-  activeActionSlot,
-  setActiveActionSlot,
-  onEditBooking,
-  handleCancelClick,
+  onSlotClick,
   setSelectedSlots,
   selectedSlots,
 }: any) => {
@@ -28,11 +27,7 @@ const MobileSchedule = ({
   const handleSlotSelect = (time: string) => {
     const isBooked = getSlotStatus(time);
     if (isBooked) {
-      if (activeActionSlot == time) {
-        setActiveActionSlot(null);
-        return;
-      }
-      setActiveActionSlot(time);
+      onSlotClick(isBooked);
       return;
     }
 
@@ -84,7 +79,7 @@ const MobileSchedule = ({
         </p>
       </div>
 
-      <div className="bg-white rounded-4xl border border-neutral-100 shadow-sm divide-y">
+      <div className="bg-white rounded-4xl border border-neutral-100 shadow-sm divide-y overflow-hidden">
         {timeSlots.map((time: any, i: number) => {
           const booking = getSlotStatus(time);
           const slotState = booking?.status ?? "available";
@@ -103,70 +98,41 @@ const MobileSchedule = ({
           const isSelected = selectedSlots.includes(time);
 
           return (
-            <div key={time}>
-              <div
-                className={`h-full flex flex-col justify-between p-6 border transition-all duration-300 cursor-pointer overflow-hidden ${timeSlots?.length == i + 1 && "rounded-b-4xl"} ${i == 0 && "rounded-t-4xl"}
+            <div
+              key={time}
+              className={`flex flex-col justify-between p-6 transition-all duration-300 cursor-pointer overflow-hidden
                     ${
                       isSelected
-                        ? "bg-[#0099662b] text-black border-emerald-600 shadow-xl"
+                        ? "bg-[#0099662b] text-black border-emerald-600"
                         : ui.card
-                      // ? `bg-gray-300 border-neutral-100 opacity-60  `
-                      // : "bg-emerald-50/10 border-emerald-100/30 hover:bg-emerald-50/30 hover:border-emerald-200"
                     }`}
-                onClick={() => ui.clickable && handleSlotSelect(time)}
-              >
-                <div className="flex items-center gap-6">
-                  <div
-                    className={`w-14 text-sm font-bold ${booking ? "text-black" : "text-neutral-400"}`}
-                  >
-                    {time}
-                  </div>
+              onClick={() => handleSlotSelect(time)}
+            >
+              <div className="flex items-center gap-6">
+                <div
+                  className={`w-14 text-sm font-bold ${booking ? "text-black" : "text-neutral-400"}`}
+                >
+                  {time}
+                </div>
 
-                  <div>
-                    {booking ? (
-                      <>
-                        <p className="text-sm font-bold text-neutral-900">
-                          {booking.client_name}
-                        </p>
-                        <p className="text-[10px] text-neutral-800 uppercase">
-                          {toHHMM(booking?.end_time)} End
-                        </p>
-                      </>
-                    ) : (
-                      <p className="text-sm font-semibold text-emerald-600">
-                        Available
+                <div>
+                  {booking ? (
+                    <>
+                      <p className="text-sm font-bold text-neutral-900">
+                        {booking.client_name}
                       </p>
-                    )}
-                  </div>
-                  {/* <div
-                      className={`w-8 h-8 rounded-xl flex items-center justify-center ${ui.iconWrap}`}
-                    >
-                      {ui.icon === "check" && <Check size={16} />}
-                      {ui.icon === "plus" && <Plus size={16} />}
-                      {ui.icon === "x" && <X size={16} />}
-                    </div> */}
+                      <p className="text-[10px] text-neutral-500 uppercase">
+                        Until{" "}
+                        {dayjs.utc(booking.end_time).local().format("h:mm A")}
+                      </p>
+                    </>
+                  ) : (
+                    <p className="text-sm font-semibold text-emerald-600">
+                      Available
+                    </p>
+                  )}
                 </div>
               </div>
-
-              {booking?.status === "booked" && activeActionSlot === time && (
-                <div className="flex gap-2 bg-neutral-900 p-2">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onEditBooking(booking);
-                    }}
-                    className="flex-1 h-12 bg-neutral-800 text-white rounded-xl text-xs font-bold uppercase"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={(e) => handleCancelClick(e, booking.id)}
-                    className="flex-1 h-12 bg-red-900/40 text-red-400 rounded-xl text-xs font-bold uppercase"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              )}
             </div>
           );
         })}
