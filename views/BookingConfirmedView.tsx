@@ -1,29 +1,44 @@
-
-import React from 'react';
-import { Booking, View } from '../types';
+import React from "react";
+import { Booking } from "../types";
 // Fix: Use lib/helpers instead of deprecated utils/helpers
-import { formatCurrency } from '../lib/helpers';
-import { MessageCircle, CheckCircle2 } from 'lucide-react';
+import { formatCurrency } from "../lib/helpers";
+import { MessageCircle, CheckCircle2 } from "lucide-react";
+import dayjs from "dayjs";
 
 interface BookingConfirmedViewProps {
   booking: Booking;
   onDone: () => void;
 }
 
-const BookingConfirmedView: React.FC<BookingConfirmedViewProps> = ({ booking, onDone }) => {
+const BookingConfirmedView: React.FC<BookingConfirmedViewProps> = ({
+  booking,
+  onDone,
+}) => {
   const shareOnWhatsApp = () => {
-    const text = `Hello ${booking.client_name},
-Your booking is confirmed.
+    const formattedDate = dayjs(booking.date).format("dddd, MMM D, YYYY");
+    const formatTime = (time: string) => {
+      // If it's a full ISO string, format it. If it's already HH:mm, use it.
+      return time.includes("T") ? dayjs(time).format("hh:mm A") : time;
+    };
 
-📅 Date: ${booking.date}
-⏰ Time: ${booking.start_time} – ${booking.end_time}
-💰 Amount: ₹${booking.amount}
+    const startTime = formatTime(booking.start_time);
+    const endTime = formatTime(booking.end_time);
 
-Thank you.`;
-    
+    const text = `✅ *Booking Confirmed!*
+
+Hello *${booking.client_name}*, your booking at our turf has been successfully confirmed.
+
+*Booking Details:*
+📅 *Date:* ${formattedDate}
+⏰ *Time:* ${startTime} - ${endTime}
+💰 *Total Amount:* ${formatCurrency(booking.amount)}
+📍 *Status:* Confirmed
+
+We look forward to seeing you! ⚽🏆`;
+
     const encodedText = encodeURIComponent(text);
-    const whatsappUrl = `https://wa.me/${booking.client_mobile}?text=${encodedText}`;
-    window.open(whatsappUrl, '_blank');
+    const whatsappUrl = `https://wa.me/91${booking.client_mobile}?text=${encodedText}`;
+    window.open(whatsappUrl, "_blank");
   };
 
   return (
@@ -34,9 +49,15 @@ Thank you.`;
             <CheckCircle2 size={48} />
           </div>
         </div>
-        <h1 className="text-2xl font-bold text-neutral-900">Booking Confirmed!</h1>
+        <h1 className="text-2xl font-bold text-neutral-900">
+          Booking Confirmed!
+        </h1>
         <p className="text-neutral-500 max-w-xs mx-auto">
-          The booking for <span className="text-neutral-900 font-semibold">{booking.client_name}</span> has been saved to your schedule.
+          The booking for{" "}
+          <span className="text-neutral-900 font-semibold">
+            {booking.client_name}
+          </span>{" "}
+          has been saved to your schedule.
         </p>
       </div>
 
@@ -48,7 +69,7 @@ Thank you.`;
           <MessageCircle size={20} />
           Share on WhatsApp
         </button>
-        
+
         <button
           onClick={onDone}
           className="w-full cursor-pointer h-14 bg-white text-neutral-700 font-semibold rounded-xl border border-neutral-200 active:bg-neutral-50 transition-colors"
@@ -60,11 +81,15 @@ Thank you.`;
       <div className="bg-neutral-100 p-4 rounded-xl border border-neutral-200 w-full max-w-xs">
         <div className="flex justify-between text-xs mb-2">
           <span className="text-neutral-500">Booking Reference</span>
-          <span className="text-neutral-900 font-mono uppercase">{booking.id}</span>
+          <span className="text-neutral-900 font-mono uppercase">
+            {booking.id}
+          </span>
         </div>
         <div className="flex justify-between text-sm">
           <span className="text-neutral-500">Amount</span>
-          <span className="text-neutral-900 font-bold">{formatCurrency(booking.amount)}</span>
+          <span className="text-neutral-900 font-bold">
+            {formatCurrency(booking.amount)}
+          </span>
         </div>
       </div>
     </div>

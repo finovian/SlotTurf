@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware';
 import { AppState, Owner, Booking, Turf } from '../types';
 import { useBookings, useCancelBooking, useSaveBooking, useTurfs } from '@/hooks/use-data';
 import { HHMMToMinutes } from './helpers';
+import Cookies from "js-cookie";
 
 
 
@@ -27,7 +28,7 @@ interface UIStore extends Omit<AppState, 'currentView'> {
   clearToast: () => void;
 }
 
-const STORAGE_KEY = 'turfflow_ui_v6';
+const STORAGE_KEY = 'SlotTurf_ui_v6';
 
 export const useUIStore = create<UIStore>()(
   persist(
@@ -105,7 +106,10 @@ export const useStore = () => {
       ui.setTempMobile(mobile);
       ui.showToast(`OTP sent to +91 ${mobile}`, 'info');
     },
-    logout: ui.reset,
+    logout: () => {
+      ui.reset();
+      Cookies.remove("access_token");
+    },
     setSelectedTurf: ui.setSelectedTurfId,
     setEditingBooking: ui.setEditingBooking,
     setCurrentView: ui.setCurrentView,

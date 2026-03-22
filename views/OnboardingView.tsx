@@ -30,7 +30,7 @@ const OnboardingView: React.FC<OnboardingViewProps> = ({ onComplete }) => {
             <CheckCircle2 size={40} />
           </div>
           <div className="space-y-1">
-            <h1 className="text-3xl font-bold text-neutral-900 tracking-tight">Welcome to TurfFlow</h1>
+            <h1 className="text-3xl font-bold text-neutral-900 tracking-tight">Welcome to SlotTurf</h1>
             <p className="text-neutral-500 text-sm font-medium">Create your first ground profile to begin managing bookings.</p>
           </div>
         </div>
