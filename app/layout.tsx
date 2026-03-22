@@ -16,6 +16,10 @@ export const metadata: Metadata = {
   description: "Manage your turf bookings with ease.",
   manifest: "/manifest.json",
   themeColor: "#000000",
+  icons: {
+    icon: "/slotturffavicon.svg",
+    apple: "/slotturffavicon.svg",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",

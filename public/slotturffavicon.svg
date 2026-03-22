@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Outer container -->
+  <rect x="4" y="4" width="120" height="120" rx="26" fill="#0F172A"></rect>
+
+  <!-- Calendar base -->
+  <rect x="26" y="34" width="76" height="70" rx="14" fill="#F8FAFC"></rect>
+
+  <!-- Calendar header -->
+  <rect x="26" y="34" width="76" height="18" rx="14" fill="#16A34A"></rect>
+
+  <!-- Calendar rings -->
+  <rect x="38" y="22" width="8" height="18" rx="4" fill="#15803D"></rect>
+  <rect x="82" y="22" width="8" height="18" rx="4" fill="#15803D"></rect>
+
+  <!-- Booking indicator -->
+  <rect x="46" y="64" width="36" height="8" rx="4" fill="#16A34A"></rect>
+</svg>
