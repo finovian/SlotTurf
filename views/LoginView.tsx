@@ -22,7 +22,7 @@ const LoginView: React.FC<LoginViewProps> = ({ onSendOTP, tempMobile }) => {
           </div>
           <div className="space-y-1">
             <h1 className="text-2xl font-bold tracking-tight text-neutral-900">
-              TurfFlow Pro
+              SlotTurf Pro
             </h1>
             <p className="text-neutral-500 text-sm">
               Enter your mobile number to get started.

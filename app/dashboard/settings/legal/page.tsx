@@ -11,7 +11,7 @@ import { ShieldCheck } from "lucide-react";
               {label}
             </h4>
             <div className="space-y-3 text-sm text-neutral-500 leading-relaxed font-medium">
-              <p>TurfFlow Pro is committed to protecting your business data. We use industry-standard encryption to ensure your bookings and revenue information remain confidential.</p>
+              <p>SlotTurf Pro is committed to protecting your business data. We use industry-standard encryption to ensure your bookings and revenue information remain confidential.</p>
               <p className="text-xs">Last updated: January 2025</p>
             </div>
           </div>

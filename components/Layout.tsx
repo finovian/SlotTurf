@@ -60,7 +60,7 @@ export default function Layout({ children, currentView, onNavigate }: LayoutProp
   };
 
   const isPrimaryView = navItems.some(item => item.view === currentView);
-  const title = titleMap[currentView] || 'TurfFlow Pro';
+  const title = titleMap[currentView] || 'SlotTurf Pro';
 
   return (
     <div className="min-h-screen bg-neutral-50 flex flex-col font-ubuntu scrollbar-hide">

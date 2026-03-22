@@ -67,7 +67,7 @@ export default function Layout({
   };
 
   const isPrimaryView = navItems.some((item) => item.href === pathname);
-  const title = titleMap[pathname] || "TurfFlow Pro";
+  const title = titleMap[pathname] || "SlotTurf Pro";
 
   return (
     <div className="min-h-screen bg-neutral-50 flex flex-col font-ubuntu scrollbar-hide">
@@ -80,7 +80,7 @@ export default function Layout({
           </div>
           <div>
             <h1 className="text-lg font-bold text-neutral-900 tracking-tight leading-none">
-              TurfFlow
+              SlotTurf
             </h1>
             <p className="text-[10px] text-emerald-600 font-bold uppercase tracking-widest mt-1">
               SaaS Edition

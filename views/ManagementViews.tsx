@@ -353,7 +353,7 @@ export const LegalView: React.FC = () => {
             </h4>
             <div className="space-y-3 text-sm text-neutral-500 leading-relaxed font-medium">
               <p>
-                TurfFlow Pro is committed to protecting your business data. We
+                SlotTurf Pro is committed to protecting your business data. We
                 use industry-standard encryption to ensure your bookings and
                 revenue information remain confidential.
               </p>
@@ -383,7 +383,7 @@ export const SupportView: React.FC = () => {
 
       <div className="grid grid-cols-1 gap-4">
         <a
-          href="mailto:support@turfflow.pro"
+          href="mailto:support@SlotTurf.pro"
           className="bg-white border border-neutral-100 rounded-[28px] p-5 flex items-center gap-4 hover:bg-neutral-50 active:scale-95 transition-all"
         >
           <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
@@ -392,7 +392,7 @@ export const SupportView: React.FC = () => {
           <div>
             <p className="text-sm font-bold text-neutral-900">Email Support</p>
             <p className="text-[10px] font-bold text-neutral-400 uppercase">
-              support@turfflow.pro
+              support@SlotTurf.pro
             </p>
           </div>
         </a>

@@ -9,16 +9,10 @@ export default function BookingConfirmedPage() {
   const router = useRouter();
   const { editingBooking, setSelectedDate, setSelectedSlots, setEditingBooking } = useUIStore();
 
-  useEffect(() => {
-    // Clear the selection/editing state after successful booking
-    return () => {
-      setSelectedDate(null);
-      setSelectedSlots([]);
-      setEditingBooking(null);
-    };
-  }, [setSelectedDate, setSelectedSlots, setEditingBooking]);
-
   const handleDone = () => {
+    setSelectedDate(null);
+    setSelectedSlots([]);
+    setEditingBooking(null);
     router.replace("/dashboard/availability");
   };
 

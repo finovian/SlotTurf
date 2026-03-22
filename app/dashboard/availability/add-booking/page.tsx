@@ -12,7 +12,7 @@ import { Booking } from "../../../../types";
 
 export default function AddBookingPage() {
   const router = useRouter();
-  const { selectedTurfId, editingBooking } = useUIStore();
+  const { selectedTurfId, editingBooking, setEditingBooking, showToast } = useUIStore();
   const { data: turfs } = useTurfs();
   const saveBooking = useCreateBooking();
   const editBooking = useSaveBooking();
@@ -21,17 +21,39 @@ export default function AddBookingPage() {
     turfs?.ground?.find((t) => t.id === selectedTurfId) || turfs?.ground?.[0];
 
   const handleAddBooking = (booking: Booking) => {
-    console.log('editingBooking', editingBooking)
     if (editingBooking) {
       editBooking.mutate(booking, {
-        onSuccess: () => {
+        onSuccess: (data: any) => {
+          showToast("Booking updated successfully", "success");
+          // Update the store with the latest booking data from the server
+          const updatedBooking = data.booking || (data.status === true ? data : null) || booking;
+          setEditingBooking({
+            ...booking,
+            ...updatedBooking,
+            // Ensure amount is mapped correctly
+            amount: updatedBooking.amount !== undefined ? updatedBooking.amount : booking.amount
+          });
           router.push("/dashboard/availability/add-booking/confirmed");
+        },
+        onError: (error: any) => {
+          showToast(error.message || "Failed to update booking", "error");
         }
       });
     } else {
       saveBooking.mutate(booking, {
-        onSuccess: () => {
+        onSuccess: (data: any) => {
+          showToast("Booking created successfully", "success");
+          // Update the store with the created booking data
+          const newBooking = data.booking || (data.status === true ? data : null) || booking;
+          setEditingBooking({
+            ...booking,
+            ...newBooking,
+            amount: newBooking.amount !== undefined ? newBooking.amount : booking.amount
+          });
           router.push("/dashboard/availability/add-booking/confirmed");
+        },
+        onError: (error: any) => {
+          showToast(error.message || "Failed to create booking", "error");
         }
       });
     }

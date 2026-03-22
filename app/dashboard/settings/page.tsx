@@ -2,23 +2,21 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useUIStore } from "@/lib/store";
-import { useTurfs } from "@/hooks/use-data";
+import { useStore } from "@/lib/store";
 import { View } from "@/types";
 import SettingsView from "@/views/SettingsView";
 import ConfirmationModal from "@/components/Modal";
 
 export default function SettingsPage() {
   const router = useRouter();
-  const { owner, reset } = useUIStore();
-  const { data: turfs = [] } = useTurfs();
+  const { logout } = useStore();
 
   const [showConfirm, setShowConfirm] = useState<"logout" | "delete" | null>(
     null,
   );
 
   const handleLogout = () => {
-    reset();
+    logout();
     router.replace("/login");
   };
   const handleNavigate = (view: View) => {
